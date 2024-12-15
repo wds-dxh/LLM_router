@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from app.models.device import Base, Device, DeviceStatus
+from models.device import Base, Device, DeviceStatus
 import json
 import os
 from datetime import datetime

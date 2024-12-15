@@ -7,7 +7,7 @@ Copyright (c) 2024 by ${wds-Ubuntu22-cqu}, All Rights Reserved.
 '''
 import os
 from typing import Dict, Any, Optional
-from app.utils.llm import OpenAIAssistant
+from utils.llm import OpenAIAssistant
 
 class LLMService:
     def __init__(self):

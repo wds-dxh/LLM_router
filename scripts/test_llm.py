@@ -11,6 +11,7 @@ import asyncio
 
 # 将项目根目录添加到Python路径
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+print(project_root)
 sys.path.append(project_root)
 
 from app.services.llm_service import LLMService

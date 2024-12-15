@@ -154,7 +154,7 @@ class ASRClient:
                 msg = json.loads(msg)
                 text = msg.get("text", "")
                 is_final = msg.get("is_final", False)
-                # 打印接收到的中间结果
+                # 打印接收到的中间��果
                 # print("接收到服务端结果: ", text)
 
                 if text:
@@ -201,9 +201,16 @@ class ASRClient:
             wav_format = "others"
             wav_name = os.path.basename(audio_file_path)
 
-        return asyncio.run(self._run_recognition(audio_bytes, wav_name, wav_format))
+        # 创建新的事件循环来运行同步方法
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        try:
+            result = loop.run_until_complete(self._run_recognition(audio_bytes, wav_name, wav_format))
+            return result
+        finally:
+            loop.close()
 
-    def recognize_audio_stream(self, pcm_data):
+    async def recognize_audio_stream(self, pcm_data):
         """
         对原始PCM音频数据进行识别。
         pcm_data: bytes类型的PCM音频数据，格式应为16kHz单声道16bit。
@@ -211,7 +218,8 @@ class ASRClient:
         """
         wav_name = "stream_data"
         wav_format = "pcm"
-        return asyncio.run(self._run_recognition(pcm_data, wav_name, wav_format))
+        # 直接调用 _run_recognition，不要使用 asyncio.run()
+        return await self._run_recognition(pcm_data, wav_name, wav_format)
 
     async def _run_recognition(self, audio_bytes, wav_name, wav_format):
         """
