@@ -12,7 +12,7 @@ from app.utils.llm import OpenAIAssistant
 class LLMService:
     def __init__(self):
         """初始化LLM服务"""
-        config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'llm_config.json')
+        config_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'config', 'llm_config.json') # 获取LLM配置文件路径
         self.assistant = OpenAIAssistant(config_path)
         
     async def process_text(self, device_name: str, text: str, role_type: Optional[str] = None) -> Dict[str, Any]:
