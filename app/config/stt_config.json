@@ -1,0 +1,15 @@
+{
+    "asr": {
+        "host": "180.85.207.223",
+        "port": 10098,
+        "mode": "offline",
+        "chunk_size": [5, 10, 5],
+        "chunk_interval": 10,
+        "hotword": "",
+        "audio_fs": 16000,
+        "use_itn": true,
+        "words_max_print": 10000,
+        "ssl": false,
+        "timeout": 10
+    }
+} 

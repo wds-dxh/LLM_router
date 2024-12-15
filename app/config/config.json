@@ -1,0 +1,9 @@
+{
+    "database": {
+        "url": "mysql+pymysql://root:wdsshy0320@localhost:3306/llm_audio_db"
+    },
+    "api": {    
+        "host": "0.0.0.0",
+        "port": 8000
+    }
+} 

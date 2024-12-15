@@ -1,0 +1,6 @@
+{
+    "voice": "zh-CN-XiaoxiaoNeural",
+    "rate": "+0%",
+    "volume": "+0%",
+    "output_dir": "data/audio_output"
+} 
