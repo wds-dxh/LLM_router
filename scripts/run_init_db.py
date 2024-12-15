@@ -13,7 +13,9 @@ project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(project_root)
 
 # 导入并运行初始化函数
-from app.scripts.init_database import initialize_database
+from app.utils.database import init_db, add_device
 
 if __name__ == "__main__":
-    initialize_database()
+    init_db()
+    # 添加一个默认设备
+    add_device("default_device", "default_api_key")

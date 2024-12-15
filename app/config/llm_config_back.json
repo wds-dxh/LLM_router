@@ -17,3 +17,23 @@
         "truncate_mode": "sliding"
     }
 } 
+
+{
+    "openai": {
+        "api_key": "${OPENAI_API_KEY}",
+        "base_url": "http://180.85.206.46:10320/v1",
+        "model": "qwen2.5:32b",
+        "temperature": 0.7,
+        "max_tokens": 1000,
+        "top_p": 1.0,
+        "timeout": 60
+    },
+    "storage": {
+        "conversations_path": "data/conversations.json",
+        "prompts_path": "data/prompts.json"
+    },
+    "conversation": {
+        "max_turns": 10,
+        "truncate_mode": "sliding"
+    }
+} 

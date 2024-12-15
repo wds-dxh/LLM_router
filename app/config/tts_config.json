@@ -1,6 +1,14 @@
 {
-    "voice": "zh-CN-XiaoxiaoNeural",
-    "rate": "+0%",
-    "volume": "+0%",
-    "output_dir": "data/audio_output"
-} 
+    "appid": "5407974323",
+    "token": "R5Hqb1f_7gD-87aJzStv8vEvBSGG7j_A",
+    "cluster": "volcano_tts",
+    "voice_type": "BV005_streaming",
+    "host": "openspeech.bytedance.com",
+    "rate": 24000,
+    "encoding": "mp3",
+    "speed_ratio": 1.0,
+    "volume_ratio": 1.0,
+    "pitch_ratio": 1.0,
+    "emotion": "",
+    "language": "cn"
+}

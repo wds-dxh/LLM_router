@@ -1,0 +1,5 @@
+{
+    "database": {
+        "url": "mysql+pymysql://root:wdsshy0320@127.0.0.1:3306/llm_audio_db"
+    }
+}

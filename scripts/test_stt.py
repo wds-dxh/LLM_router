@@ -23,7 +23,7 @@ if __name__ == "__main__":
     # print("识别结果:", result_text)
 
     # 识别PCM数据流(例如已读取到的PCM二进制数据)
-    with open("./data/audio_output/asr_example.pcm", "rb") as f:
+    with open("./output.pcm", "rb") as f:
         pcm_data = f.read()
     client = ASRClient()
     result_text_stream = client.recognize_audio_stream(pcm_data)
