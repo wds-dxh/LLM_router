@@ -6,6 +6,10 @@ Description: LLM服务
 Copyright (c) 2024 by ${wds-Ubuntu22-cqu}, All Rights Reserved. 
 '''
 import os
+import sys
+# 添加项目根目录到sys.path
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from typing import Dict, Any, Optional
 from utils.llm import OpenAIAssistant
 
@@ -28,7 +32,6 @@ class LLMService:
         try:
             # 使用设备名称作为用户ID
             response = self.assistant.chat(device_name, text, role_type)
-            
             if "error" in response:
                 return {
                     "success": False,

@@ -1,13 +1,21 @@
 from fastapi import WebSocket, WebSocketDisconnect
 from services.auth_service import AuthService
 from services.speech_to_text import ASRClient
+from services.llm_service import LLMService
+from services.text_to_speech import TTSService
+from services.text_to_speech import TTSSynthesisError
+import requests
+import json
+import base64
 
 auth_service = AuthService()
 asr_client = ASRClient()
+llm_service = LLMService()
+tts_service = TTSService()
 
 async def websocket_handler(websocket: WebSocket):
-    await websocket.accept()
     try:
+        await websocket.accept()
         # 接收认证信息
         auth_data = await websocket.receive_json()
         device_name = auth_data.get("device_name")
@@ -20,16 +28,35 @@ async def websocket_handler(websocket: WebSocket):
 
         # 接收音频数据
         audio_data = await websocket.receive_bytes()
-        print(f"Received audio data of length: {len(audio_data)}")
+ 
         
         # 进行语音识别 - 确保这是异步调用
         result_text = await asr_client.recognize_audio_stream(audio_data)  # 添加 await
+
+        print("识别结果: ", result_text)
+        # 连接大模型进行对话处理
+        result_text = await llm_service.process_text(
+            device_name=device_name,
+            text=result_text,
+            role_type="default"
+        )
         
-        # 发送识别结果
-        await websocket.send_text(result_text)
+        result_text = result_text["response"]
+        # 语音合成最长1024个字符
+        if len(result_text) > 100:
+            result_text = result_text[:100]
+
+        print("识别结果: ", result_text)
+        # 使用tts服务
+        audio_data = await tts_service.synthesize(result_text, device_name)
+
+        # 发送合成的音频数据
+        await websocket.send_bytes(audio_data)
+        print("音频数据发送完成")
 
     except WebSocketDisconnect:
         print(f"WebSocket连接断开: {device_name}")
     except Exception as e:
-        print(f"处理WebSocket连接时出错: {str(e)}")
-        await websocket.close(code=1011)  # 关闭连接，服务器错误
+        print(f"WebSocket处理总体错误: {type(e).__name__}: {str(e)}")
+        await websocket.close(code=1011)
+

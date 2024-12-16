@@ -8,6 +8,7 @@ Copyright (c) 2024 by ${wds-Ubuntu22-cqu}, All Rights Reserved.
 import os
 import sys
 import asyncio
+import time
 # 将项目根目录添加到Python路径
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(project_root)
@@ -24,6 +25,8 @@ async def main():
 
 # 使用示例
 if __name__ == "__main__":
+    time_start = time.time()
     asyncio.run(main())
-
+    time_end = time.time()
+    print("STT识别耗时：", time_end - time_start)
 

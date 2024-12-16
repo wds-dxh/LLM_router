@@ -11,6 +11,7 @@ import uuid
 import base64
 import requests
 from typing import Dict, Any
+import aiohttp
 
 class TTSSynthesisError(Exception):
     """自定义异常类，用于处理TTS合成错误"""
@@ -28,14 +29,14 @@ class TTSService:
         self.api_url = f"https://{self.config['host']}/api/v1/tts"
         self.headers = {"Authorization": f"Bearer;{self.config['token']}"}
 
-    def synthesize(self, text: str, user_id: str = "default_user") -> bytes:
+    async def synthesize(self, text: str, user_id: str = "default_user") -> bytes:
         """
         合成文本为语音
         Args:
             text: 要合成的文本
             user_id: 用户ID，用于标识请求
         Returns:
-            bytes: 合成���音频数据
+            bytes: 合成后的音频数据
         """
         request_json = {
             "app": {
@@ -64,14 +65,15 @@ class TTSService:
                 "frontend_type": "unitTson"
             }
         }
-
         try:
-            response = requests.post(self.api_url, json=request_json, headers=self.headers)
-            response_data = response.json()
-            if "data" in response_data:
-                return base64.b64decode(response_data["data"])  # 返回解码后的音频数据
-            else:
-                raise TTSSynthesisError(f"TTS合成失败: {response_data.get('error', '未知错误')}")
+            async with aiohttp.ClientSession() as session:
+                async with session.post(self.api_url, json=request_json, headers=self.headers) as response:
+                    response_data = await response.json()
+                    if "data" in response_data:
+                        return base64.b64decode(response_data["data"])
+                    else:
+                        error_msg = response_data.get('error', '未知错误')
+                        raise TTSSynthesisError(f"TTS合成失败: {error_msg}")
         except Exception as e:
             raise TTSSynthesisError(f"TTS合成请求失败: {str(e)}")
 

@@ -1,6 +1,7 @@
 import asyncio
 import websockets
 import json
+import time
 
 async def send_audio_data():
     uri = "ws://127.0.0.1:8000/ws"
@@ -17,8 +18,15 @@ async def send_audio_data():
             audio_data = audio_file.read()
             await websocket.send(audio_data)   
 
-        # 接收识别结果
-        result = await websocket.recv()
-        print(f"识别结果: {result}")
+        # 接收音频数据
+        audio_data = await websocket.recv()
+        # with open("output1.pcm", "wb") as f:
+        #     f.write(audio_data)
+        
 
-asyncio.run(send_audio_data())
+
+time_start = time.time()
+for i in range(10):
+    asyncio.run(send_audio_data())
+time_end = time.time()
+print("总耗时", (time_end - time_start)/10)

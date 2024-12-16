@@ -56,7 +56,7 @@ class ConfigLoader:
             config_path: 配置文件的完整路径
         """
         self.config_path = config_path
-        load_dotenv()
+        load_dotenv("/home/wds/workspace/now/LLM_router/.env")
         self.config = self._load_config()
         
     def _load_config(self) -> Dict[str, Any]:
@@ -74,7 +74,7 @@ class ConfigLoader:
                 raise KeyError(f"Missing required configuration key: {key}")
         
         # 替换环境变量
-        config['openai']['api_key'] = os.getenv('OPENAI_API_KEY')
+        # config['openai']['api_key'] = os.getenv('OPENAI_API_KEY')
         
         # 确保存储路径是相对于配置文件的路径
         config_dir = os.path.dirname(self.config_path)
@@ -111,6 +111,7 @@ class OpenAIAssistant(LLMBase):
         self.max_turns = self.config.get('conversation', {}).get('max_turns', 10)
         self.truncate_mode = self.config.get('conversation', {}).get('truncate_mode', 'sliding')
         self.initialize()
+        print(self.config['openai']['api_key'])
         
     def initialize(self) -> None:
         """初始化OpenAI客户端"""
@@ -140,7 +141,7 @@ class OpenAIAssistant(LLMBase):
                 model=self.config['openai']['model'],
                 messages=encoded_messages,
                 temperature=self.config['openai'].get('temperature', 0.7),
-                max_tokens=self.config['openai'].get('max_tokens', 1000),
+                max_tokens=self.config['openai'].get('max_tokens', 500),   # 设置最大生成长度，
                 top_p=self.config['openai'].get('top_p', 1.0)
             )
             return {"success": True, "data": response}

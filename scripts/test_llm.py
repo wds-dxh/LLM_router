@@ -8,6 +8,7 @@ Copyright (c) 2024 by ${wds-Ubuntu22-cqu}, All Rights Reserved.
 import os
 import sys
 import asyncio
+import time
 
 # 将项目根目录添加到Python路径
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -24,53 +25,56 @@ async def test_llm():
     device_name = "test_device_001"
     
     # 测试普通对话
+    time_start = time.time()
     print("\n=== 测试普通对话 ===")
     response = await llm_service.process_text(
         device_name=device_name,
-        text="你好，请介绍一下你自己",
+        text="我觉得作业好难啊！我觉得作业好难啊！我觉得作业好难啊！",
         role_type="default"
     )
+    time_end = time.time()
+    print("对话耗时：", time_end - time_start)
     print("设备名称:", response.get("device_name"))
     print("角色:", response.get("role"))
     print("响应:", response.get("response"))
     print("成功:", response.get("success"))
     
-    # 测试流式对话
-    print("\n=== 测试流式对话 ===")
-    print("设备名称:", device_name)
-    print("响应: ", end="", flush=True)
+    # # 测试流式对话
+    # print("\n=== 测试流式对话 ===")
+    # print("设备名称:", device_name)
+    # print("响应: ", end="", flush=True)
     
-    # 使用同步方式处理流式响应
-    async for chunk in llm_service.process_text_stream(
-        device_name=device_name,
-        text="讲个笑话",
-        role_type="default"
-    ):
-        if chunk.get("success"):
-            if chunk.get("type") == "content":
-                print(chunk.get("content"), end="", flush=True)
-            elif chunk.get("type") == "done":
-                print()  # 换行
-        else:
-            print(f"\n错误: {chunk.get('error')}")
+    # # 使用同步方式处理流式响应
+    # async for chunk in llm_service.process_text_stream(
+    #     device_name=device_name,
+    #     text="讲个笑话",
+    #     role_type="default"
+    # ):
+    #     if chunk.get("success"):
+    #         if chunk.get("type") == "content":
+    #             print(chunk.get("content"), end="", flush=True)
+    #         elif chunk.get("type") == "done":
+    #             print()  # 换行
+    #     else:
+    #         print(f"\n错误: {chunk.get('error')}")
     
-    # 测试上下文
-    print("\n=== 测试上下文对话 ===")
-    response1 = await llm_service.process_text(
-        device_name=device_name,
-        text="我的名字叫小明",
-    )
-    print("第一轮响应:", response1.get("response"))
+    # # 测试上下文
+    # print("\n=== 测试上下文对话 ===")
+    # response1 = await llm_service.process_text(
+    #     device_name=device_name,
+    #     text="我的名字叫小明",
+    # )
+    # print("第一轮响应:", response1.get("response"))
     
-    response2 = await llm_service.process_text(
-        device_name=device_name,
-        text="我刚才说我叫什么名字？",
-    )
-    print("第二轮响应:", response2.get("response"))
+    # response2 = await llm_service.process_text(
+    #     device_name=device_name,
+    #     text="我刚才说我叫什么名字？",
+    # )
+    # print("第二轮响应:", response2.get("response"))
     
-    # 清理上下文
-    llm_service.clear_context(device_name)
-    print("\n测试完成！")
+    # # 清理上下文
+    # llm_service.clear_context(device_name)
+    # print("\n测试完成！")
 
 if __name__ == "__main__":
     # 运行测试
