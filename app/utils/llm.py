@@ -111,7 +111,7 @@ class OpenAIAssistant(LLMBase):
         self.max_turns = self.config.get('conversation', {}).get('max_turns', 10)
         self.truncate_mode = self.config.get('conversation', {}).get('truncate_mode', 'sliding')
         self.initialize()
-        print(self.config['openai']['api_key'])
+        # print(self.config['openai']['api_key'])
         
     def initialize(self) -> None:
         """初始化OpenAI客户端"""
