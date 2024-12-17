@@ -1,27 +1,33 @@
-version: '3.8'
-
-services:
-  app:
-    build: .
-    ports:
-      - "8000:8000"
-    volumes:
-      - .:/app
-    environment:
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/llm_router
-    depends_on:
-      - db
-
-  db:
-    image: postgres:13
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=llm_router
-    ports:
-      - "5432:5432"
-
-volumes:
-  postgres_data:
+networks: # 创建一个网络
+  LLM_router:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.20.0/24
+          gateway: 192.168.20.1
+services: 
+    mysql:  # mysql服务
+        command:
+            - --mysql-native-password=on
+        container_name: mysql
+        deploy:
+            resources:
+                limits: # 不限制cpu和内存
+                    cpus:  "0.0"
+                    memory: 0
+        environment:
+            MYSQL_ROOT_PASSWORD: wdsshy0320
+        image: mysql:8.4.3
+        labels:
+            createdBy: Apps
+        networks:
+            - LLM_router
+        ports:
+            - 0.0.0.0:3306:3306
+        restart: always
+        volumes:
+            - ./data/:/var/lib/mysql
+            - ./conf/my.cnf:/etc/my.cnf
+            - ./log:/var/log/mysql
+            - /etc/timezone:/etc/timezone:ro
+            - /etc/localtime:/etc/localtime:ro
