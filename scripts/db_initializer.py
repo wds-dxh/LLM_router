@@ -66,3 +66,7 @@ if __name__ == "__main__":
     # 然后执行示例数据初始化
     sql_sample_data_path = 'scripts/initialize_sample_data.sql'
     initialize_database(sql_sample_data_path)
+
+    # # 删除所有表
+    # sql_sample_data_path = 'scripts/delete_all_tables.sql'
+    # initialize_database(sql_sample_data_path)

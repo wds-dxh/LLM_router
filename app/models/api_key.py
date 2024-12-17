@@ -82,7 +82,9 @@ class ApiKeyModel(BaseModel):
             return result if result else None
     
     async def get_by_device_id(self, device_id: str) -> Optional[Dict[str, Any]]:
-        """通过设备ID获取API Key记录"""
+        """通过设备ID获取API Key记录
+        返回示例====设备权限 (1, 'sk-test-123456', 'device_001', '测试设备1-完整权限', 'active', datetime.datetime(2024, 12, 17, 8, 4, 48), None)
+        """
         query = f"SELECT * FROM {self.TABLE_NAME} WHERE device_id = %s AND status = 'active'"
         async with DatabaseManager.get_cursor() as cursor:
             await cursor.execute(query, (device_id,))

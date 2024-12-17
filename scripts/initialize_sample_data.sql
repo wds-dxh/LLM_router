@@ -6,11 +6,13 @@
  * Copyright (c) 2024 by ${wds-Ubuntu22-cqu}, All Rights Reserved. 
  */
 
+
 -- 插入基础权限
 INSERT INTO permissions (permission_name, description) VALUES
     ('stt.create', '语音识别权限'),
     ('tts.create', '语音合成权限'),
     ('llm.chat', 'LLM对话权限'),
+    ('all', '传入音频数据获得大模型对话后的音频'),
     ('conversation.read', '查看对话历史权限'),
     ('conversation.delete', '删除对话历史权限');
 

@@ -16,7 +16,7 @@ async def test_api_key_model():
         description='Test API Key'
     )
     print("创建API密钥：", new_api_key)
-    
+
     # 根据ID获取API密钥
     api_key = await api_key_model.get_by_id(new_api_key['id'])
     print("根据ID获取API密钥：", api_key)
@@ -28,10 +28,16 @@ async def test_api_key_model():
     # 获取所有API密钥
     api_keys = await api_key_model.get_all()
     print("所有API密钥：", api_keys)
-    
+
     # 删除API密钥
     delete_result = await api_key_model.delete(new_api_key['id'])
     print("删除API密钥：", delete_result)
+
+    delete_result = await api_key_model.get_by_device_id("device_001")
+    print("设备权限",delete_result)
+
+
+    
     
 
 

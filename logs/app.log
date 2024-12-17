@@ -1,0 +1,40 @@
+2024-12-17 21:07:54,859 - app.middlewares.auth_middleware - ERROR - Authentication failed: Forbidden: Invalid or inactive API Key
+2024-12-17 21:08:10,245 - app.middlewares.auth_middleware - ERROR - Authentication failed: Forbidden: Invalid or inactive API Key
+2024-12-17 21:11:18,107 - app.middlewares.auth_middleware - ERROR - Authentication failed: Forbidden: Inactive API Key
+2024-12-17 21:12:30,874 - app.middlewares.auth_middleware - ERROR - Authentication failed: Forbidden: Inactive API Key
+2024-12-17 21:16:44,099 - app.middlewares.auth_middleware - ERROR - Authentication failed: Forbidden: Inactive API Key
+2024-12-17 21:19:55,522 - app.middlewares.auth_middleware - ERROR - device_id: device_001, api_key: 1, status: sk-test-123456
+2024-12-17 21:19:55,522 - app.middlewares.auth_middleware - ERROR - Authentication failed: Forbidden: Inactive API Key
+2024-12-17 21:22:25,588 - app.middlewares.auth_middleware - ERROR - Unexpected error during authentication: tuple indices must be integers or slices, not str
+2024-12-17 21:22:51,579 - app.middlewares.auth_middleware - ERROR - Unexpected error during authentication: tuple indices must be integers or slices, not str
+2024-12-17 21:27:00,130 - app.middlewares.auth_middleware - ERROR - device_id: device_001, api_key: sk-test-123456, status: active
+2024-12-17 21:27:00,131 - app.middlewares.auth_middleware - INFO - Authentication successful for device_id: device_001
+2024-12-17 21:27:00,131 - app.middlewares.logging_middleware - INFO - Incoming request: GET /test from 127.0.0.1
+2024-12-17 21:27:00,131 - app.middlewares.logging_middleware - INFO - Response: 200 GET /test processed in 0.00s
+2024-12-17 21:28:34,386 - app.middlewares.auth_middleware - INFO - Authentication successful for device_id: device_001
+2024-12-17 21:28:34,387 - app.middlewares.logging_middleware - INFO - Incoming request: GET /test/read from 127.0.0.1
+2024-12-17 21:28:34,387 - app.utils.permission_checker - ERROR - Permission denied: 'read' required but not granted
+2024-12-17 21:28:34,387 - app.middlewares.logging_middleware - INFO - Response: 403 GET /test/read processed in 0.00s
+2024-12-17 21:29:59,416 - app.middlewares.auth_middleware - INFO - Authentication successful for device_id: device_001
+2024-12-17 21:29:59,416 - app.middlewares.logging_middleware - INFO - Incoming request: GET /test/llm from 127.0.0.1
+2024-12-17 21:29:59,416 - app.utils.permission_checker - ERROR - Permission denied: 'llm.chat' required but not granted
+2024-12-17 21:29:59,417 - app.middlewares.logging_middleware - INFO - Response: 403 GET /test/llm processed in 0.00s
+2024-12-17 21:30:58,571 - app.middlewares.auth_middleware - INFO - Authentication successful for device_id: device_001
+2024-12-17 21:30:58,571 - app.middlewares.logging_middleware - INFO - Incoming request: GET /test/llm from 127.0.0.1
+2024-12-17 21:30:58,571 - app.utils.permission_checker - ERROR - Permission denied: 'llm.chat' required but not granted
+2024-12-17 21:30:58,571 - app.middlewares.logging_middleware - INFO - Response: 403 GET /test/llm processed in 0.00s
+2024-12-17 21:31:14,969 - app.middlewares.auth_middleware - INFO - Authentication successful for device_id: device_001
+2024-12-17 21:31:14,969 - app.middlewares.logging_middleware - INFO - Incoming request: GET /test/llm from 127.0.0.1
+2024-12-17 21:31:14,969 - app.utils.permission_checker - ERROR - Permission denied: 'llm.chat' required but not granted
+2024-12-17 21:31:14,969 - app.middlewares.logging_middleware - INFO - Response: 403 GET /test/llm processed in 0.00s
+2024-12-17 21:31:54,760 - app.middlewares.auth_middleware - INFO - Authentication successful for device_id: device_001
+2024-12-17 21:31:54,761 - app.middlewares.logging_middleware - INFO - Incoming request: GET /test/llm from 127.0.0.1
+2024-12-17 21:31:54,761 - app.utils.permission_checker - INFO - Permission 'llm.chat' granted
+2024-12-17 21:31:54,761 - app.middlewares.logging_middleware - INFO - Response: 200 GET /test/llm processed in 0.00s
+2024-12-17 21:32:14,578 - app.middlewares.auth_middleware - INFO - Authentication successful for device_id: device_001
+2024-12-17 21:32:14,578 - app.middlewares.logging_middleware - INFO - Incoming request: GET /test/llm from 127.0.0.1
+2024-12-17 21:32:14,579 - app.middlewares.logging_middleware - ERROR - Exception: name 'permissions' is not defined - GET /test/llm processed in 0.00s
+2024-12-17 21:32:30,153 - app.middlewares.auth_middleware - INFO - Authentication successful for device_id: device_001
+2024-12-17 21:32:30,153 - app.middlewares.logging_middleware - INFO - Incoming request: GET /test/llm from 127.0.0.1
+2024-12-17 21:32:30,153 - app.utils.permission_checker - INFO - Permission 'llm.chat' granted
+2024-12-17 21:32:30,153 - app.middlewares.logging_middleware - INFO - Response: 200 GET /test/llm processed in 0.00s

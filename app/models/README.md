@@ -32,30 +32,53 @@
 
 **方法**:
 - `create(**kwargs) -> Dict[str, Any]`: 创建权限记录。
+    - 参数:
+        - `**kwargs`: 权限的属性，例如`name`。
+    - 返回值: 包含新创建的权限记录的字典。
     ```python
     new_permission = PermissionModel.create(name="read_access")
     ```
 - `get_by_id(id: int) -> Optional[Dict[str, Any]]`: 通过ID获取权限记录。
+    - 参数:
+        - `id`: 权限的ID。
+    - 返回值: 包含权限记录的字典，如果未找到则返回`None`。
     ```python
     permission = PermissionModel.get_by_id(1)
     ```
 - `get_all(limit: int = 100, offset: int = 0) -> List[Dict[str, Any]]`: 获取所有权限记录。
+    - 参数:
+        - `limit`: 返回记录的最大数量。
+        - `offset`: 记录的偏移量。
+    - 返回值: 包含权限记录的字典列表。
     ```python
     permissions = PermissionModel.get_all(limit=50, offset=0)
     ```
 - `update(id: int, **kwargs) -> bool`: 更新权限记录。
+    - 参数:
+        - `id`: 权限的ID。
+        - `**kwargs`: 要更新的权限属性。
+    - 返回值: 更新是否成功的布尔值。
     ```python
     success = PermissionModel.update(1, name="write_access")
     ```
 - `delete(id: int) -> bool`: 删除权限记录。
+    - 参数:
+        - `id`: 权限的ID。
+    - 返回值: 删除是否成功的布尔值。
     ```python
     success = PermissionModel.delete(1)
     ```
 - `get_by_name(permission_name: str) -> Optional[Dict[str, Any]]`: 通过权限名称获取权限记录。
+    - 参数:
+        - `permission_name`: 权限的名称。
+    - 返回值: 包含权限记录的字典，如果未找到则返回`None`。
     ```python
     permission = PermissionModel.get_by_name("read_access")
     ```
 - `get_api_keys_with_permission(permission_name: str) -> List[Dict[str, Any]]`: 获取拥有指定权限的所有API Key。
+    - 参数:
+        - `permission_name`: 权限的名称。
+    - 返回值: 包含API Key记录的字典列表。
     ```python
     api_keys = PermissionModel.get_api_keys_with_permission("read_access")
     ```
@@ -100,38 +123,74 @@
 
 **方法**:
 - `create(**kwargs) -> Dict[str, Any]`: 创建语音识别记录。
+    - 参数:
+        - `**kwargs`: 语音识别的属性，例如`device_id`和`result`。
+    - 返回值: 包含新创建的语音识别记录的字典。
     ```python
     new_stt_result = STTResultModel.create(device_id="device123", result="Hello, world!")
     ```
 - `get_by_id(id: int) -> Optional[Dict[str, Any]]`: 通过ID获取语音识别记录。
+    - 参数:
+        - `id`: 语音识别记录的ID。
+    - 返回值: 包含语音识别记录的字典，如果未找到则返回`None`。
     ```python
     stt_result = STTResultModel.get_by_id(1)
     ```
 - `get_all(limit: int = 100, offset: int = 0) -> List[Dict[str, Any]]`: 获取所有语音识别记录。
+    - 参数:
+        - `limit`: 返回记录的最大数量。
+        - `offset`: 记录的偏移量。
+    - 返回值: 包含语音识别记录的字典列表。
     ```python
     stt_results = STTResultModel.get_all(limit=50, offset=0)
     ```
 - `update(id: int, **kwargs) -> bool`: 更新语音识别记录。
+    - 参数:
+        - `id`: 语音识别记录的ID。
+        - `**kwargs`: 要更新的语音识别属性。
+    - 返回值: 更新是否成功的布尔值。
     ```python
     success = STTResultModel.update(1, result="Updated result")
     ```
 - `delete(id: int) -> bool`: 删除语音识别记录。
+    - 参数:
+        - `id`: 语音识别记录的ID。
+    - 返回值: 删除是否成功的布尔值。
     ```python
     success = STTResultModel.delete(1)
     ```
 - `search_results(keyword: str, device_id: str = None, start_date: datetime = None, end_date: datetime = None, limit: int = 100, offset: int = 0) -> List[Dict[str, Any]]`: 搜索语音识别记录。
+    - 参数:
+        - `keyword`: 搜索关键字。
+        - `device_id`: 设备ID（可选）。
+        - `start_date`: 开始日期（可选）。
+        - `end_date`: 结束日期（可选）。
+        - `limit`: 返回记录的最大数量。
+        - `offset`: 记录的偏移量。
+    - 返回值: 包含语音识别记录的字典列表。
     ```python
     results = STTResultModel.search_results(keyword="hello", device_id="device123")
     ```
 - `get_by_device_id(device_id: str, limit: int = 100, offset: int = 0) -> List[Dict[str, Any]]`: 获取指定设备的语音识别记录。
+    - 参数:
+        - `device_id`: 设备ID。
+        - `limit`: 返回记录的最大数量。
+        - `offset`: 记录的偏移量。
+    - 返回值: 包含语音识别记录的字典列表。
     ```python
     stt_results = STTResultModel.get_by_device_id("device123", limit=50, offset=0)
     ```
 - `get_by_file_path(audio_file_path: str) -> Optional[Dict[str, Any]]`: 通过音频文件路径获取语音识别记录。
+    - 参数:
+        - `audio_file_path`: 音频文件路径。
+    - 返回值: 包含语音识别记录的字典，如果未找到则返回`None`。
     ```python
     stt_result = STTResultModel.get_by_file_path("/path/to/audio/file")
     ```
 - `delete_by_device_id(device_id: str) -> bool`: 删除指定设备的所有语音识别记录。
+    - 参数:
+        - `device_id`: 设备ID。
+    - 返回值: 删除是否成功的布尔值。
     ```python
     success = STTResultModel.delete_by_device_id("device123")
     ```
