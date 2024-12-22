@@ -16,8 +16,8 @@ def get_logger(name: str):
     log_file = os.path.join(log_dir, "app.log")
 
     # 配置日志格式
-    logger = logging.getLogger(name)
-    logger.setLevel(logging.INFO)
+    logger = logging.getLogger(name)    # 创建日志记录器
+    logger.setLevel(logging.INFO)# 设置日志级别
 
     # 防止重复添加处理器
     if not logger.handlers:

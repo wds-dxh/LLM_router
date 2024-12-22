@@ -38,3 +38,7 @@
 2024-12-17 21:32:30,153 - app.middlewares.logging_middleware - INFO - Incoming request: GET /test/llm from 127.0.0.1
 2024-12-17 21:32:30,153 - app.utils.permission_checker - INFO - Permission 'llm.chat' granted
 2024-12-17 21:32:30,153 - app.middlewares.logging_middleware - INFO - Response: 200 GET /test/llm processed in 0.00s
+2024-12-22 13:22:36,475 - TestApp - INFO - 程序启动
+2024-12-22 13:22:36,475 - TestApp - WARNING - 注意：这只是一个警告
+2024-12-22 13:22:36,475 - TestApp - ERROR - 错误：某些功能未能正常运行
+2024-12-22 13:22:36,475 - TestApp - CRITICAL - 严重错误：程序即将崩溃
