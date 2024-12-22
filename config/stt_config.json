@@ -1,1 +1,17 @@
-
+{
+    "default_provider": "aliyun",
+    "providers": {
+        "aliyun": {
+            "app_key": "ha5OsDlffgxrJZ7c",
+            "token": "45b3522b6d5641fbbf5b727ddd0053ec",
+            "format": "pcm",
+            "sample_rate": 16000,
+            "region_id": "cn-shanghai",
+            "connection_pool": {
+                "max_connections": 2,
+                "max_keepalive": 1000,
+                "keepalive_expiry": 30.0
+            }
+        }
+    }
+}

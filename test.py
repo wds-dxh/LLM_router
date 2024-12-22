@@ -1,44 +1,38 @@
-from typing import Callable, Optional
+import asyncio
+import time
+from app.utils.config_loader import ConfigLoader
+from app.services.stt_service import STTService
 
-class CallbackClass:
-    def __init__(self):
-        self._callback: Optional[Callable[[str], None]] = None
+async def recognize_stt(stt_service, audio_data):
+    # 执行语音识别
+    time_now = time.time()
+    result = await stt_service.recognize(audio_data)
+    print(f"Time cost: {time.time() - time_now:.2f}s")
+    return result
 
-    def register_callback(self, callback: Callable[[str], None]):
-        """
-        注册回调函数。
-        :param callback: 回调函数，接受一个字符串参数。
-        """
-        self._callback = callback
+async def main():
+    config_loader = ConfigLoader()
+    async with STTService(config_loader) as stt_service:
+        # 读取音频文件
+        with open('./output.wav', 'rb') as f:
+            audio_data = f.read()
 
-    def some_method(self):
-        """
-        触发回调的某个方法。
-        """
-        print("some_method 被调用了！")
-        # 触发回调函数
-        if self._callback:
-            self._callback("some_method 执行完成！")
+        # 同时启动两个语音识别任务
+        tasks = [
+            recognize_stt(stt_service, audio_data),
+            recognize_stt(stt_service, audio_data),
+            recognize_stt(stt_service, audio_data),
+            recognize_stt(stt_service, audio_data)
+        ]
+        
+        # 等待两个任务完成
+        results = await asyncio.gather(*tasks)
 
-    def another_method(self):
-        """
-        不触发回调的另一个方法。
-        """
-        print("another_method 被调用了！")
+        # 打印两个任务的结果
+        for i, result in enumerate(results, 1):
+            print(f"Result from task {i}: {result}")
 
-
-# 使用示例
-def my_callback(message: str):
-    print(f"回调函数被触发，消息：{message}")
-
-# 创建类的实例
-obj = CallbackClass()
-
-# 注册回调函数
-obj.register_callback(my_callback)
-
-# 调用触发回调的方法
-obj.some_method()
-
-# 调用不触发回调的方法
-obj.another_method()
+if __name__ == "__main__":
+    time_now = time.time()
+    asyncio.run(main())
+    print("Time cost1111:", time.time() - time_now)

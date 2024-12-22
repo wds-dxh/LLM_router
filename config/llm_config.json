@@ -1,1 +1,13 @@
-
+{
+    "default_provider": "openai",
+    "providers": {
+        "openai": {
+            "api_key": "YOUR_OPENAI_API_KEY",
+            "endpoint": "https://api.openai.com/v1/engines/text-davinci-003/completions"
+        },
+        "other_provider": {
+            "api_key": "YOUR_OTHER_LLM_API_KEY",
+            "endpoint": "https://llm.otherprovider.com/v1"
+        }
+    }
+}
