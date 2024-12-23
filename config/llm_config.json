@@ -2,12 +2,21 @@
     "default_provider": "openai",
     "providers": {
         "openai": {
-            "api_key": "YOUR_OPENAI_API_KEY",
-            "endpoint": "https://api.openai.com/v1/engines/text-davinci-003/completions"
-        },
-        "other_provider": {
-            "api_key": "YOUR_OTHER_LLM_API_KEY",
-            "endpoint": "https://llm.otherprovider.com/v1"
+            "api_key": "sk-PLvmgppR3434WqQI5vo0wgxB9FkFwzwXuomR3dFQnO7H2cp1",
+            "base_url": "https://api.chatanywhere.tech",
+            "model": "gpt-4o-mini",
+            "temperature": 0.7,
+            "max_tokens": 500,
+            "top_p": 1.0,
+            "timeout": 30.0
         }
+    },
+    "storage": {
+        "conversations_path": "data/conversations.json",
+        "prompts_path": "data/prompts.json"
+    },
+    "conversation": {
+        "max_turns": 10,
+        "truncate_mode": "sliding"
     }
 }

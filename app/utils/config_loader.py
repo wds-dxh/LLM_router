@@ -1,6 +1,6 @@
-
 import json
 import os
+from typing import Dict, Any
 
 import sys
 sys.path.append("/home/wds/workspace/now/LLM_router")
@@ -18,6 +18,21 @@ class ConfigLoader:
         """
         self.config_directory = config_directory
         self.config = self._load_all_configs()
+        self._process_paths()
+
+    def _process_paths(self) -> None:
+        """处理配置文件中的路径，转换为绝对路径"""
+        for service_type in ["stt", "llm"]:  # 处理所有服务类型的路径
+            if service_type in self.config:
+                storage = self.config[service_type].get("storage", {})
+                base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+                
+                for key in ["conversations_path", "prompts_path"]:
+                    if key in storage:
+                        if not os.path.isabs(storage[key]):
+                            storage[key] = os.path.join(base_dir, storage[key])
+                        # 确保目录存在
+                        os.makedirs(os.path.dirname(storage[key]), exist_ok=True)
 
     def _load_all_configs(self):
         """
@@ -25,8 +40,8 @@ class ConfigLoader:
         """
         configs = {
             "stt": self._load_config("stt_config.json"),
-            # "tts": self._load_config("tts_config.json"),
-            # "llm": self._load_config("llm_config.json")
+            "llm": self._load_config("llm_config.json"),  # 添加LLM配置
+            # "tts": self._load_config("tts_config.json")
         }
         return configs
 
@@ -53,25 +68,42 @@ class ConfigLoader:
         """
         return self.config.get("tts")
 
-    def get_llm_config(self):
+    def get_llm_config(self) -> Dict:
         """
-        获取 LLM 配置。
+        获取LLM配置，返回完整配置包括公共部分
         """
-        return self.config.get("llm")
+        if "llm" not in self.config:
+            return None
+            
+        # 返回完整配置，包括providers、storage等所有内容
+        return self.config["llm"]
 
-
-#######################stt_config专属################################
     def get_provider_config(self, service_type: str, provider_name: str):
         """
         根据服务类型和提供商名称获取相应的配置。
+        同时合并公共配置（storage、conversation等）
         """
         if service_type not in self.config:
             raise ValueError(f"Unknown service type: {service_type}")
         
-        provider_config = self.config[service_type].get("providers", {}).get(provider_name)
+        service_config = self.config[service_type]
+        provider_config = service_config.get("providers", {}).get(provider_name)
+        
         if not provider_config:
             raise ValueError(f"Provider {provider_name} not found in {service_type} config.")
-        return provider_config
+        
+        # 合并公共配置
+        merged_config = provider_config.copy()
+        
+        # 添加存储配置
+        if "storage" in service_config:
+            merged_config["storage"] = service_config["storage"]
+            
+        # 添加对话配置
+        if "conversation" in service_config:
+            merged_config["conversation"] = service_config["conversation"]
+            
+        return merged_config
 
     def get_default_provider(self, service_type: str):
         """
@@ -81,11 +113,10 @@ class ConfigLoader:
             raise ValueError(f"Unknown service type: {service_type}")
         
         return self.config[service_type].get("default_provider")
-#######################stt_config专属################################
 
 
 if __name__ == "__main__":
     config_loader = ConfigLoader()
-    print(config_loader.get_stt_config())
+    print(config_loader.get_llm_config())
 
-    print(config_loader.get_provider_config("stt", "aliyun").get("api_key"))
+    # print(config_loader.get_provider_config("stt", "aliyun").get("api_key"))
