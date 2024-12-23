@@ -31,7 +31,7 @@ class STTService:
         """初始化默认引擎"""
         stt_config = self.config_loader.get_stt_config()
         default_provider = stt_config.get("default_provider")
-        provider_config = self.config_loader.get_provider_config("stt", default_provider)
+        provider_config = self.config_loader.get_provider_config("stt", default_provider)   
         self._engine = STTEngineFactory.create(default_provider, provider_config)
         logger.debug(f"Initialized default STT engine: {default_provider}")
 

@@ -59,6 +59,8 @@ class ConfigLoader:
         """
         return self.config.get("llm")
 
+
+#######################stt_config专属################################
     def get_provider_config(self, service_type: str, provider_name: str):
         """
         根据服务类型和提供商名称获取相应的配置。
@@ -79,6 +81,7 @@ class ConfigLoader:
             raise ValueError(f"Unknown service type: {service_type}")
         
         return self.config[service_type].get("default_provider")
+#######################stt_config专属################################
 
 
 if __name__ == "__main__":
