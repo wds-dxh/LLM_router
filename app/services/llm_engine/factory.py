@@ -1,13 +1,14 @@
 from typing import Dict, Any
 from .base import BaseLLMEngine
 from .openai import OpenAIEngine
+from .ollama import OllamaEngine
 
 class LLMEngineFactory:
     """LLM引擎工厂类"""
     
     _engines = {
         "openai": OpenAIEngine,
-        # 后续可以添加更多引擎
+        "ollama": OllamaEngine  # 添加ollama支持
     }
 
     @classmethod

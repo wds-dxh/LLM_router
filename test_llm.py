@@ -15,9 +15,11 @@ async def test_basic_chat(llm_service):
     llm_service.set_role("儿童心理专家")
     print(f"当前角色: {llm_service.get_current_role()}")
     
+
+    
     # 测试对话
     print("\n=== 测试对话 ===")
-    response = await llm_service.chat(user_id, "我又花掉了五元，现在还有多少钱")
+    response = await llm_service.chat(user_id, "你是谁？")
     print(f"响应: {response['text']}\n")
     # response = await llm_service.chat(user_id, "你会什么？")
     # print(f"响应: {response['text']}\n")
@@ -26,11 +28,18 @@ async def test_stream_chat(llm_service):
     """测试流式对话功能"""
     user_id = "test_user"
     
+    llm_service.set_role("儿童心理专家")
+    print(f"当前角色: {llm_service.get_current_role()}")
+    
+    
     print("\n=== 测试流式对话 ===")
     print("AI: ", end="", flush=True)
-    async for chunk in llm_service.chat_stream(user_id, "Tell me a story"):
+    time_now = time.time()
+    async for chunk in llm_service.chat_stream(user_id, "给我讲一个笑话"):
         if chunk.get('type') == 'content':
+            
             print(chunk['text'], end="", flush=True)
+    print("首次响应耗时: {:.2f} 秒".format(time.time() - time_now))
     print("\n")
 
 async def test_context_management(llm_service):
@@ -56,8 +65,8 @@ async def main():
     
     async with LLMService(config_loader) as llm_service:
         try:
-            await test_basic_chat(llm_service)
-            # await test_stream_chat(llm_service)
+            # await test_basic_chat(llm_service)
+            await test_stream_chat(llm_service)
             # await test_context_management(llm_service)
             
         except Exception as e:
