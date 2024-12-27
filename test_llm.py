@@ -31,11 +31,13 @@ async def test_stream_chat(llm_service):
     llm_service.set_role("儿童心理专家")
     print(f"当前角色: {llm_service.get_current_role()}")
     
+    llm_service.set_role("知心大姐姐")
+    print(f"当前角色: {llm_service.get_current_role()}")
     
     print("\n=== 测试流式对话 ===")
     print("AI: ", end="", flush=True)
 
-    async for chunk in llm_service.chat_stream(user_id, "给我讲一个笑话"):
+    async for chunk in llm_service.chat_stream(user_id, "你是谁啊"):
         if chunk.get('type') == 'content':
             print(chunk['text'], end="", flush=True)
     print("\n")

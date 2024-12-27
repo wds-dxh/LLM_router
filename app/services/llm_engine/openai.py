@@ -269,15 +269,6 @@ class OpenAIEngine(BaseLLMEngine):
                 stream=True
             )
             async for chunk in response:
-                # # chunk 可能包含多个 delta，但最常见是只有一个
-                # choice = chunk.choices[0]
-                # if "delta" in choice and "content" in choice.delta:
-                #     delta_content = choice.delta.content
-                #     assistant_response_buffer += delta_content  # 累积到本地缓冲
-                #     yield {
-                #         'text': delta_content,
-                #         'type': 'content'
-                #     }
                 if chunk.choices[0].delta.content:
                     assistant_response_buffer += chunk.choices[0].delta.content
                     yield {
