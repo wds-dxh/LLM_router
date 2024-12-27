@@ -7,14 +7,14 @@ async def test_basic_chat(llm_service):
     """测试基本对话功能"""
     user_id = "test_user"
     
+    
+    
+    llm_service.set_role("知心大姐姐")
+    print(f"当前角色: {llm_service.get_current_role()}")
     # 测试角色管理
     print("\n=== 测试角色管理 ===")
     roles = llm_service.list_available_roles()
     print(f"可用角色: {roles}")
-    
-    llm_service.set_role("儿童心理专家")
-    print(f"当前角色: {llm_service.get_current_role()}")
-    
 
     
     # 测试对话
@@ -34,12 +34,10 @@ async def test_stream_chat(llm_service):
     
     print("\n=== 测试流式对话 ===")
     print("AI: ", end="", flush=True)
-    time_now = time.time()
+
     async for chunk in llm_service.chat_stream(user_id, "给我讲一个笑话"):
         if chunk.get('type') == 'content':
-            
             print(chunk['text'], end="", flush=True)
-    print("首次响应耗时: {:.2f} 秒".format(time.time() - time_now))
     print("\n")
 
 async def test_context_management(llm_service):

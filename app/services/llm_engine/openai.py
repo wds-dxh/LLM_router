@@ -121,19 +121,24 @@ class OpenAIEngine(BaseLLMEngine):
             conversations_path = self.config['storage']['conversations_path']
             if os.path.exists(conversations_path):
                 with open(conversations_path, 'r', encoding='utf-8') as f:
+                    # 如果文件为空，返回空字典
+                    if os.path.getsize(conversations_path) == 0:
+                        self.conversation_context = {}
+                        return
                     history = json.load(f)
-                    for user_role_key, messages in history.items():
-                        # 解析用户ID和角色
-                        user_id, role = user_role_key.split('_', 1)
-                        # 只保留最近的MAX_HISTORY条消息作为上下文
-                        recent_messages = []
-                        for conv in messages[-self.MAX_HISTORY:]:
-                            recent_messages.extend(conv['messages'])
-                        if recent_messages:
-                            system_prompt = self._prompts.get(role, self._prompts["default"])
-                            self.conversation_context[user_role_key] = [
-                                {"role": "system", "content": system_prompt}
-                            ] + recent_messages
+                    if history:
+                        for user_role_key, messages in history.items():
+                            # 解析用户ID和角色
+                            user_id, role = user_role_key.split('_', 1)
+                            # 只保留最近的MAX_HISTORY条消息作为上下文
+                            recent_messages = []
+                            for conv in messages[-self.MAX_HISTORY:]:
+                                recent_messages.extend(conv['messages'])
+                            if recent_messages:
+                                system_prompt = self._prompts.get(role, self._prompts["default"])
+                                self.conversation_context[user_role_key] = [
+                                    {"role": "system", "content": system_prompt}
+                                ] + recent_messages
         except Exception as e:
             print(f"Error loading conversation history: {e}")
 
@@ -212,9 +217,48 @@ class OpenAIEngine(BaseLLMEngine):
         except Exception as e:
             return {"success": False, "error": str(e)}
 
+    # async def chat_stream(self, user_id: str, message: str, context: Optional[list] = None) -> AsyncGenerator[Dict[str, Any], None]:
+    #     """流式对话"""
+    #     messages = self._prepare_messages(message, context)
+    #     try:
+    #         response = await self._client.chat.completions.create(
+    #             model=self.config['model'],
+    #             messages=messages,
+    #             temperature=self.config.get('temperature', 0.7),
+    #             max_tokens=self.config.get('max_tokens', 500),
+    #             top_p=self.config.get('top_p', 1.0),
+    #             stream=True
+    #         )
+    #         async for chunk in response:
+    #             if chunk.choices[0].delta.content:
+    #                 yield {
+    #                     'text': chunk.choices[0].delta.content,
+    #                     'type': 'content'
+    #                 }
+    #     except Exception as e:
+    #         yield {'error': str(e), 'type': 'error'}
     async def chat_stream(self, user_id: str, message: str, context: Optional[list] = None) -> AsyncGenerator[Dict[str, Any], None]:
         """流式对话"""
-        messages = self._prepare_messages(message, context)
+        user_role_key = self._get_user_role_key(user_id)
+        
+        # 如果不存在用户上下文，则初始化
+        if user_role_key not in self.conversation_context:
+            system_prompt = self._prompts.get(self.current_role, self._prompts["default"])
+            self.conversation_context[user_role_key] = [
+                {"role": "system", "content": system_prompt}
+            ]
+
+        # 先将用户的消息添加到上下文
+        self.conversation_context[user_role_key].append(
+            {"role": "user", "content": message}
+        )
+
+        # 准备要发送给 OpenAI API 的消息
+        messages = self.conversation_context[user_role_key]
+
+        # 用于临时拼接助手返回的内容
+        assistant_response_buffer = ""
+
         try:
             response = await self._client.chat.completions.create(
                 model=self.config['model'],
@@ -225,13 +269,44 @@ class OpenAIEngine(BaseLLMEngine):
                 stream=True
             )
             async for chunk in response:
+                # # chunk 可能包含多个 delta，但最常见是只有一个
+                # choice = chunk.choices[0]
+                # if "delta" in choice and "content" in choice.delta:
+                #     delta_content = choice.delta.content
+                #     assistant_response_buffer += delta_content  # 累积到本地缓冲
+                #     yield {
+                #         'text': delta_content,
+                #         'type': 'content'
+                #     }
                 if chunk.choices[0].delta.content:
+                    assistant_response_buffer += chunk.choices[0].delta.content
                     yield {
                         'text': chunk.choices[0].delta.content,
                         'type': 'content'
                     }
         except Exception as e:
+            # 遇到异常时，返回错误信息
             yield {'error': str(e), 'type': 'error'}
+            return
+
+        # 流式传输结束后，将完整的助手回复添加到上下文中
+        if assistant_response_buffer:
+            self.conversation_context[user_role_key].append(
+                {"role": "assistant", "content": assistant_response_buffer}
+            )
+
+            # 控制上下文的最大长度
+            if len(self.conversation_context[user_role_key]) > self.MAX_HISTORY + 1:  # +1 是 system 消息
+                self.conversation_context[user_role_key] = [
+                    self.conversation_context[user_role_key][0]  # 保留 system 消息
+                ] + self.conversation_context[user_role_key][-(self.MAX_HISTORY):]  # 保留最近的消息
+
+            # 将最新的两条消息（用户 + AI）保存到文件
+            await self.save_conversation(user_id, [
+                {"role": "user", "content": message},
+                {"role": "assistant", "content": assistant_response_buffer}
+            ])
+
 
     def set_role(self, role_type: str) -> bool:
         if role_type in self._prompts:
