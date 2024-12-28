@@ -35,15 +35,11 @@ class ConfigLoader:
                         os.makedirs(os.path.dirname(storage[key]), exist_ok=True)
 
     def _load_all_configs(self):
-        """
-        加载所有配置文件（STT, TTS, LLM）。
-        """
-        configs = {
+        return {
             "stt": self._load_config("stt_config.json"),
-            "llm": self._load_config("llm_config.json"),  # 添加LLM配置
-            # "tts": self._load_config("tts_config.json")
+            "tts": self._load_config("tts_config.json"),  # 添加 TTS 配置
+            "llm": self._load_config("llm_config.json")
         }
-        return configs
 
     def _load_config(self, config_file: str):
         """

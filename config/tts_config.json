@@ -1,15 +1,16 @@
 {
-    "default_provider": "bytedance",
+    "default_provider": "iflytek",
     "providers": {
-        "bytedance": {
-            "api_key": "YOUR_BYTEDANCE_API_KEY",
-            "endpoint": "https://tts.bytedance.com/v1",
-            "voice": "male"
-        },
-        "other_provider": {
-            "api_key": "YOUR_OTHER_TTS_API_KEY",
-            "endpoint": "https://tts.otherprovider.com/v1",
-            "voice": "female"
+        "iflytek": {
+            "app_id": "0b0cacf7",
+            "api_secret": "YzJmNGQzMjI4ZjQxN2RlM2EzNzk4ZDA1",
+            "api_key": "acdcad01a0b1d08454de0595b5115f33",
+            "aue": "raw",
+            "auf": "audio/L16;rate=16000",
+            "vcn": "x_yuer",
+            "tte": "utf8",
+            "output_path": "data/tts_output",
+            "timeout": 30.0
         }
     }
 }

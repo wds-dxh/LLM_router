@@ -51,12 +51,11 @@ class STTService:
 
         try:
             result = await self._engine.recognize(audio_data, **kwargs)
-
+            # 获取最终文本
+            final_text = result.get('text', '')
+            # 回调只传入完整文本即可
             if self._callback:
-                # 如果是异步回调，直接 await；若是同步函数，需要在此区分
-                await self._callback(result)
-                logger.debug("Callback executed after recognition.")
-
+                await self._callback({"final_text": final_text})
             return result
         except Exception as e:
             # 建议使用 logger 代替 print
@@ -69,13 +68,16 @@ class STTService:
         if not self._engine:
             raise RuntimeError("STT engine not initialized")
 
-        # 这里是一个异步生成器
+        accumulated_text = ""
         try:
-            async for result in self._engine.recognize_stream(audio_stream, **kwargs):
-                if self._callback:
-                    await self._callback(result)
-                    logger.debug("Callback executed for stream chunk.")
-                yield result
+            async for partial_result in self._engine.recognize_stream(audio_stream, **kwargs):
+                # 这里 partial_result 可能是多次返回的文本片段
+                accumulated_text += partial_result.get('text', "")
+            # 全部识别结束后再一次性回调
+            if self._callback:
+                await self._callback({"final_text": accumulated_text})
+            # 同时可将最终结果返回给调用者
+            return {"text": accumulated_text}
         except Exception as e:
             logger.error(f"Error during streaming recognition: {e}", exc_info=True)
             raise
