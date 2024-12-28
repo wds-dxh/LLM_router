@@ -13,7 +13,7 @@ class OpenAIEngine(BaseLLMEngine):
     
     _client: ClassVar[AsyncOpenAI] = None
     _prompts: ClassVar[Dict[str, str]] = None
-    MAX_HISTORY = 10  # 最大历史记录数
+    # MAX_HISTORY = 10  # 最大历史记录数        //之前是直接写在类里的，现在改成了实例属性，并且从配置文件中读取
     
     def __init__(self, config: Dict[str, Any]):
         super().__init__(config)
@@ -130,9 +130,9 @@ class OpenAIEngine(BaseLLMEngine):
                         for user_role_key, messages in history.items():
                             # 解析用户ID和角色
                             user_id, role = user_role_key.split('_', 1)
-                            # 只保留最近的MAX_HISTORY条消息作为上下文
+                            # 只保留最近的self.max_turns条消息作为上下文
                             recent_messages = []
-                            for conv in messages[-self.MAX_HISTORY:]:
+                            for conv in messages[-self.max_turns:]:
                                 recent_messages.extend(conv['messages'])
                             if recent_messages:
                                 system_prompt = self._prompts.get(role, self._prompts["default"])
@@ -175,10 +175,10 @@ class OpenAIEngine(BaseLLMEngine):
             )
 
             # 保持上下文在最大限制内
-            if len(self.conversation_context[user_role_key]) > self.MAX_HISTORY + 1:  # +1 是因为system消息
+            if len(self.conversation_context[user_role_key]) > self.max_turns + 1:  # +1 是因为system消息
                 self.conversation_context[user_role_key] = [
                     self.conversation_context[user_role_key][0]  # 保留system消息
-                ] + self.conversation_context[user_role_key][-(self.MAX_HISTORY):]  # 保留最近的消息
+                ] + self.conversation_context[user_role_key][-(self.max_turns):]  # 保留最近的消息
 
             # 保存最近的对话到文件
             await self.save_conversation(user_id, [
@@ -287,10 +287,10 @@ class OpenAIEngine(BaseLLMEngine):
             )
 
             # 控制上下文的最大长度
-            if len(self.conversation_context[user_role_key]) > self.MAX_HISTORY + 1:  # +1 是 system 消息
+            if len(self.conversation_context[user_role_key]) > self.max_turns + 1:  # +1 是 system 消息
                 self.conversation_context[user_role_key] = [
                     self.conversation_context[user_role_key][0]  # 保留 system 消息
-                ] + self.conversation_context[user_role_key][-(self.MAX_HISTORY):]  # 保留最近的消息
+                ] + self.conversation_context[user_role_key][-(self.max_turns):]  # 保留最近的消息
 
             # 将最新的两条消息（用户 + AI）保存到文件
             await self.save_conversation(user_id, [
@@ -340,8 +340,8 @@ class OpenAIEngine(BaseLLMEngine):
                 history[user_role_key].append(data)
                 
                 # 限制每个用户角色组合的历史记录数量
-                if len(history[user_role_key]) > self.MAX_HISTORY:
-                    history[user_role_key] = history[user_role_key][-self.MAX_HISTORY:]
+                if len(history[user_role_key]) > self.max_turns:
+                    history[user_role_key] = history[user_role_key][-self.max_turns:]
 
                 with open(conversations_path, 'w', encoding='utf-8') as f:
                     json.dump(history, f, indent=2, ensure_ascii=False)

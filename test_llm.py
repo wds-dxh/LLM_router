@@ -19,7 +19,7 @@ async def test_basic_chat(llm_service):
     
     # 测试对话
     print("\n=== 测试对话 ===")
-    response = await llm_service.chat(user_id, "你是谁？")
+    response = await llm_service.chat(user_id, "我有一百元钱")
     print(f"响应: {response['text']}\n")
     # response = await llm_service.chat(user_id, "你会什么？")
     # print(f"响应: {response['text']}\n")
@@ -37,7 +37,7 @@ async def test_stream_chat(llm_service):
     print("\n=== 测试流式对话 ===")
     print("AI: ", end="", flush=True)
 
-    async for chunk in llm_service.chat_stream(user_id, "你是谁啊"):
+    async for chunk in llm_service.chat_stream(user_id, "你还记得我有多钱吗》"):
         if chunk.get('type') == 'content':
             print(chunk['text'], end="", flush=True)
     print("\n")
