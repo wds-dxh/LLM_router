@@ -59,6 +59,10 @@ def initialize_database(sql_file_path):
             connection.close()
 
 if __name__ == "__main__":
+    
+        # 删除所有表
+    sql_sample_data_path = 'scripts/delete_all_tables.sql'
+    initialize_database(sql_sample_data_path)
     # 首先执行表结构初始化
     sql_schema_path = 'scripts/init_db.sql'
     initialize_database(sql_schema_path)
@@ -66,7 +70,3 @@ if __name__ == "__main__":
     # 然后执行示例数据初始化
     sql_sample_data_path = 'scripts/initialize_sample_data.sql'
     initialize_database(sql_sample_data_path)
-
-    # # 删除所有表
-    # sql_sample_data_path = 'scripts/delete_all_tables.sql'
-    # initialize_database(sql_sample_data_path)

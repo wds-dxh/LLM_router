@@ -10,16 +10,12 @@ from .base import BaseModel
 from .api_key import ApiKeyModel
 from .permissions import PermissionModel
 from .conversations import ConversationModel
-from .stt_results import STTResultModel
-from .tts_results import TTSResultModel
 
 class ModelFactory:
     _models: Dict[str, Type[BaseModel]] = {
         'api_key': ApiKeyModel,
         'permission': PermissionModel,
         'conversation': ConversationModel,
-        'stt_result': STTResultModel,
-        'tts_result': TTSResultModel
     }
     
     @classmethod

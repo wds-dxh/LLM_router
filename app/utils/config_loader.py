@@ -36,8 +36,6 @@ class ConfigLoader:
 
     def _load_all_configs(self):
         return {
-            "stt": self._load_config("stt_config.json"),
-            "tts": self._load_config("tts_config.json"),  # 添加 TTS 配置
             "llm": self._load_config("llm_config.json")
         }
 
@@ -51,18 +49,6 @@ class ConfigLoader:
 
         with open(config_path, "r", encoding="utf-8") as f:
             return json.load(f)
-
-    def get_stt_config(self):
-        """
-        获取 STT 配置。
-        """
-        return self.config.get("stt")
-
-    def get_tts_config(self):
-        """
-        获取 TTS 配置。
-        """
-        return self.config.get("tts")
 
     def get_llm_config(self) -> Dict:
         """

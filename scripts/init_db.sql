@@ -14,24 +14,7 @@ CREATE TABLE IF NOT EXISTS conversations (
     input_text TEXT,        -- 输入文本
     response_text TEXT,     -- 响应文本
     role VARCHAR(64),       -- 大模型扮演的角色
-    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
--- 创建语音识别记录表
-CREATE TABLE IF NOT EXISTS stt_results (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    device_id VARCHAR(64),  -- 设备ID，预设的设备标识符
-    audio_file_path TEXT,   -- 音频文件路径
-    recognized_text TEXT,   -- 识别出的文本
-    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
--- 创建语音合成记录表
-CREATE TABLE IF NOT EXISTS tts_results (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    device_id VARCHAR(64),  -- 设备ID，预设的设备标识符
-    input_text TEXT,        -- 输入文本
-    audio_file_path TEXT,   -- 生成的音频文件路径
+    mood VARCHAR(64) DEFAULT 'neutral', -- 对话心情
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 

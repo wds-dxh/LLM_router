@@ -53,5 +53,5 @@ async def run_load_test(concurrent_tasks=100):
 
 # 运行压测
 if __name__ == '__main__':
-    concurrent_tasks = 100  # 定义并发任务数量
+    concurrent_tasks = 1000  # 定义并发任务数量
     asyncio.run(run_load_test(concurrent_tasks))

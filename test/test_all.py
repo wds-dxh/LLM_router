@@ -1,14 +1,8 @@
-import os
-import sys
-sys.path.append("/home/wds/workspace/now/LLM_router")  # 添加项目根目录到环境变量
-
 import asyncio
 from app.models import (
     ApiKeyModel,
     PermissionModel,
     ConversationModel,
-    STTResultModel,
-    TTSResultModel
 )
 
 async def test_api_key_model():
@@ -42,7 +36,7 @@ async def test_permission_model():
     permission_model = PermissionModel()
     
     # 创建权限
-    new_permission = await permission_model.create( # 返回的是字典
+    new_permission = await permission_model.create(
         permission_name='test_permission',
         description='Test Permission'
     )
@@ -67,12 +61,14 @@ async def test_permission_model():
 async def test_conversation_model():
     conversation_model = ConversationModel()
     
-    # 创建对话记录
+    # 创建对话记录，确保提供 user_id
     new_conversation = await conversation_model.create(
         device_id='test_device_id',
-        user_id='test_user_id',
+        user_id='test_user_id',  # 添加 user_id
         input_text='Hello',
-        response_text='Hi there!'
+        response_text='Hi there!',
+        role='assistant',    # 可选，默认为 'assistant'
+        mood='neutral'      # 可选，默认为 'neutral'
     )
     print("创建对话记录：", new_conversation)
 
@@ -92,66 +88,11 @@ async def test_conversation_model():
     delete_result = await conversation_model.delete(new_conversation['id'])
     print("删除对话记录：", delete_result)
 
-async def test_stt_result_model():
-    stt_result_model = STTResultModel()
-    
-    # 创建语音识别记录
-    new_stt_result = await stt_result_model.create(
-        device_id='test_device_id',
-        audio_file_path='/path/to/audio',
-        recognized_text='Hello'
-    )
-    print("创建语音识别记录：", new_stt_result)
-
-    # 根据ID获取语音识别记录
-    stt_result = await stt_result_model.get_by_id(new_stt_result['id'])
-    print("根据ID获取语音识别记录：", stt_result)
-    
-    # 更新语音识别记录
-    update_result = await stt_result_model.update(new_stt_result['id'], recognized_text='Hi there!')
-    print("更新语音识别记录：", update_result)
-    
-    # 获取所有语音识别记录
-    stt_results = await stt_result_model.get_all()
-    print("所有语音识别记录：", stt_results)
-
-    # 删除语音识别记录
-    delete_result = await stt_result_model.delete(new_stt_result['id'])
-    print("删除语音识别记录：", delete_result)
-
-async def test_tts_result_model():
-    tts_result_model = TTSResultModel()
-    
-    # 创建语音合成记录
-    new_tts_result = await tts_result_model.create(
-        device_id='test_device_id',
-        input_text='Hello',
-        audio_file_path='/path/to/audio'
-    )
-    print("创建语音合成记录：", new_tts_result)
-
-    # 根据ID获取语音合成记录
-    tts_result = await tts_result_model.get_by_id(new_tts_result['id'])
-    print("根据ID获取语音合成记录：", tts_result)
-    
-    # 更新语音合成记录
-    update_result = await tts_result_model.update(new_tts_result['id'], input_text='Hi there!')
-    print("更新语音合成记录：", update_result)
-    
-    # 获取所有语音合成记录
-    tts_results = await tts_result_model.get_all()
-    print("所有语音合成记录：", tts_results)
-
-    # 删除语音合成记录
-    delete_result = await tts_result_model.delete(new_tts_result['id'])
-    print("删除语音合成记录：", delete_result)
 
 async def main():
     # await test_api_key_model()
     # await test_permission_model()
-    # await test_conversation_model()
-    # await test_stt_result_model()
-    await test_tts_result_model()
+    await test_conversation_model()
 
 # 运行测试
 if __name__ == '__main__':

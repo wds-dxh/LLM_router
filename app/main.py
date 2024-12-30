@@ -30,11 +30,11 @@ async def test_endpoint(request: Request):
 # 需要 read 权限的路由
 @app.get("/test/llm")
 @check_permission("llm.chat")   # 监测是否具有某一特定的权限 
-async def test_read(request: Request):
-    return {"message": "成功访问只读资源"}
+async def test_llm(request: Request):
+    return {"message": "成功访问 LLM 资源"}
 
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
 # 启动：
-# python app/main.py
+# python app/main.py``
