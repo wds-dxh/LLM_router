@@ -1,10 +1,9 @@
 import asyncio
-from typing import Optional, Callable, Dict, Any, AsyncGenerator
+from typing import Optional, Callable, Dict, Any, AsyncGenerator, Union
 from inspect import iscoroutinefunction
 from app.services.tts_engine.factory import TTSEngineFactory
 from app.services.tts_engine.base import BaseTTSEngine
 from app.utils.config_loader import ConfigLoader
-# ...existing imports...
 
 class TTSService:
     """TTS服务类"""
@@ -58,40 +57,30 @@ class TTSService:
         except Exception as e:
             raise RuntimeError(f"Error during TTS synthesis: {str(e)}")
 
-    async def synthesize_stream(self, text: str) -> AsyncGenerator[Dict[str, Any], None]:
-        """流式合成"""
+    async def synthesize_stream(self, text_chunks: Union[str, AsyncGenerator[str, None]]) -> AsyncGenerator[Dict[str, Any], None]:
+        """
+        流式合成
+        支持单个文本字符串或文本块异步生成器作为输入
+        """
         if not self._engine:
             raise RuntimeError("TTS engine not initialized")
 
         try:
-            async for chunk in self._engine.synthesize_stream(text):
+            # 如果输入是字符串，转换为单个文本块的生成器
+            if isinstance(text_chunks, str):
+                async def single_chunk():
+                    yield text_chunks
+                chunks_generator = single_chunk()
+            else:
+                chunks_generator = text_chunks
+
+            async for chunk in self._engine.synthesize_stream(chunks_generator):
                 if self._callback:
                     if iscoroutinefunction(self._callback):
                         await self._callback(chunk)
                     else:
                         self._callback(chunk)
                 yield chunk
-        except Exception as e:
-            raise RuntimeError(f"Error during streaming TTS: {str(e)}")
-
-    async def synthesize_stream(self, text_chunks: AsyncGenerator[str, None]) -> AsyncGenerator[Dict[str, Any], None]:
-        """
-        流式合成: 按段获取文本并逐步生成音频流
-        text_chunks: 异步生成器，一次返回一小段文本
-        """
-        if not self._engine:
-            raise RuntimeError("TTS engine not initialized")
-
-        try:
-            # 直接将 text_chunks 传给引擎
-            async for audio_chunk in self._engine.synthesize_stream(text_chunks):
-                # 每次返回已合成的PCM数据片段
-                if self._callback:
-                    if iscoroutinefunction(self._callback):
-                        await self._callback(audio_chunk)
-                    else:
-                        self._callback(audio_chunk)
-                yield audio_chunk
         except Exception as e:
             raise RuntimeError(f"Error during streaming TTS: {str(e)}")
 

@@ -40,6 +40,7 @@ async def test_stream_chat(llm_service):
     async for chunk in llm_service.chat_stream(user_id, "你还记得我有多钱吗》"):
         if chunk.get('type') == 'content':
             print(chunk['text'], end="", flush=True)
+            print("--------------------------------------------")
     print("\n")
 
 async def test_context_management(llm_service):
@@ -65,8 +66,8 @@ async def main():
     
     async with LLMService(config_loader) as llm_service:
         try:
-            # await test_basic_chat(llm_service)
-            await test_stream_chat(llm_service)
+            await test_basic_chat(llm_service)
+            # await test_stream_chat(llm_service)
             # await test_context_management(llm_service)
             
         except Exception as e:
