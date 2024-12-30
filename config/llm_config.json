@@ -1,5 +1,5 @@
 {
-    "default_provider": "ollama",
+    "default_provider": "zhipu",
     "providers": {
         "openai": {
             "api_key": "sk-PLvmgppR3434WqQI5vo0wgxB9FkFwzwXuomR3dFQnO7H2cp1",
@@ -10,10 +10,28 @@
             "top_p": 1.0,
             "timeout": 30.0
         },
-        "ollama": {
+        "ollama1": {
             "api_key": "sk-PLvmgppR3434WqQI5vo0wgxB9FkFwzwXuomR3dFQnO7H2cp1",
             "base_url": "http://180.85.206.46:10320/v1",
-            "model": "qwen2.5-coder:0.5b",
+            "model": "qwen2.5:32b",
+            "temperature": 0.7,
+            "max_tokens": 500,
+            "top_p": 1.0,
+            "timeout": 30.0
+        },
+        "kimi": {
+            "api_key": "sk-lU0YiSOtSjvFDPKcEKgFjSxIB1f73bjkNqvpH07OoDX3HEL5",
+            "base_url": "https://api.moonshot.cn/v1",
+            "model": "moonshot-v1-8k",
+            "temperature": 0.7,
+            "max_tokens": 500,
+            "top_p": 1.0,
+            "timeout": 30.0
+        },
+        "zhipu": {
+            "api_key": "e7303294578f9b218ade519b01cb7916.ILKzsTZLnaNVGLJl",
+            "base_url": "https://open.bigmodel.cn/api/paas/v4/",
+            "model": "glm-4-flash",
             "temperature": 0.7,
             "max_tokens": 500,
             "top_p": 1.0,

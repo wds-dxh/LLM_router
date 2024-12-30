@@ -157,7 +157,7 @@ class OpenAIEngine(BaseLLMEngine):
         self.conversation_context[user_role_key].append(
             {"role": "user", "content": message}
         )
-
+  
         try:
             response = await self._make_request(self.conversation_context[user_role_key])
             if not response["success"]:
@@ -185,7 +185,6 @@ class OpenAIEngine(BaseLLMEngine):
                 {"role": "user", "content": message},
                 {"role": "assistant", "content": result['text']}
             ])
-
             return result
         except Exception as e:
             raise RuntimeError(f"Chat failed: {str(e)}")

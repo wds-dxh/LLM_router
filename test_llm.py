@@ -61,15 +61,18 @@ async def test_context_management(llm_service):
     llm_service.clear_context(user_id)
     print("上下文已清除")
 
+async def run_tests(llm_service):
+    # 并发执行 10 个 test_basic_chat 测试
+    tasks = [test_basic_chat(llm_service) for _ in range(1)]
+    await asyncio.gather(*tasks)
+
 async def main():
     config_loader = ConfigLoader()
     
     async with LLMService(config_loader) as llm_service:
         try:
-            await test_basic_chat(llm_service)
-            # await test_stream_chat(llm_service)
-            # await test_context_management(llm_service)
-            
+            # 运行 10 个并发的 test_basic_chat 测试
+            await run_tests(llm_service)
         except Exception as e:
             print(f"测试过程中出错: {str(e)}")
 

@@ -25,7 +25,9 @@ async def websocket_endpoint(websocket: WebSocket):
     # 调用 websocket_auth 方法进行鉴权
     if not await auth_middleware.websocket_auth(websocket):
         return  # 鉴权失败，连接已关闭
-
+    # 发送欢迎消息
+    # await websocket.send_text("Welcome to WebSocket")
+    
     # 鉴权成功，继续处理 WebSocket 连接
     await handle_websocket_connection(websocket)
 
@@ -33,4 +35,8 @@ async def websocket_endpoint(websocket: WebSocket):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
+    
+# 启动
+# gunicorn -k uvicorn.workers.UvicornWorker app.main:app --bind 0.0.0.0:8000 --workers 10
+
 

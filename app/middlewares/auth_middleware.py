@@ -73,6 +73,7 @@ class AuthMiddleware(BaseHTTPMiddleware):
             api_key_record = await api_key_model.get_by_device_id(device_id)
             if not api_key_record:  # 如果 API Key 不存在，则拒绝访问
                 await websocket.close(code=4001)
+                logger.error(f"API Key not found for device_id: {device_id}")
                 return False
 
             api_key = api_key_record[1]  # 获取 API Key
@@ -90,7 +91,8 @@ class AuthMiddleware(BaseHTTPMiddleware):
             # 缓存 API Key 和权限到 websocket.state
             websocket.state.auth = {
                 "api_key": api_key,
-                "permissions": {perm[1] for perm in permissions}  # 权限名在最后一个位置
+                "permissions": {perm[1] for perm in permissions},  # 权限名在最后一个位置
+                "device_id": device_id
             }
             logger.info(f"WebSocket authentication successful for device_id: {device_id}")
             return True
