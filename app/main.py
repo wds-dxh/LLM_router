@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, WebSocket
 
 import sys
 sys.path.append("/home/wds/workspace/now/LLM_router")
@@ -6,23 +6,17 @@ sys.path.append("/home/wds/workspace/now/LLM_router")
 from app.middlewares.auth_middleware import AuthMiddleware
 from app.middlewares.logging_middleware import LoggingMiddleware
 from app.utils.permission_checker import check_permission
-from app.routers import websocket
+from app.routers import websocket   # 导入 WebSocket 路由
 
 app = FastAPI()
-
-
 
 # 添加中间件
 app.add_middleware(LoggingMiddleware)  # 日志中间件
 app.add_middleware(AuthMiddleware)     # 鉴权中间件,仅判断是否有权限
 
 # 添加 WebSocket 路由
-app.include_router(websocket.router, prefix="/ws")
+app.include_router(websocket.router)
 
-@app.get("/test/llm")
-@check_permission("llm.chat")   # 监测是否具有某一特定的权限 
-async def test_llm(request: Request):
-    return {"message": "成功访问 LLM 资源"}
 
 
 
