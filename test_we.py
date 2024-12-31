@@ -4,8 +4,13 @@ import time
 import websockets
 
 # 定义一个用于处理接收到消息的回调函数
+
+
 async def handle_message(response):
-    print(f"Received: {response}")
+    # print(f"Received: {response}")
+    # 不换行输出
+    print(response, end="", flush=True)
+
 
 async def test_websocket():
     uri = "ws://lab-cqu.dxh-wds.top:8000/ws"
@@ -37,9 +42,11 @@ async def test_websocket():
             print(f"Error during connection attempt {attempt + 1}: {e}")
             await asyncio.sleep(1)  # 等待1秒后重试
 
+
 async def main():
     # 启动多个 WebSocket 客户端
-    tasks = [asyncio.create_task(test_websocket()) for _ in range(1)]  # 减少并发连接数
+    tasks = [asyncio.create_task(test_websocket())
+             for _ in range(1)]  # 减少并发连接数
     await asyncio.gather(*tasks)
 
 if __name__ == "__main__":

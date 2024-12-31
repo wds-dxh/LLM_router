@@ -10,7 +10,7 @@
             "top_p": 1.0,
             "timeout": 30.0
         },
-        "ollama1": {
+        "ollama": {
             "api_key": "sk-PLvmgppR3434WqQI5vo0wgxB9FkFwzwXuomR3dFQnO7H2cp1",
             "base_url": "http://180.85.206.46:10320/v1",
             "model": "qwen2.5:32b",

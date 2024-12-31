@@ -8,13 +8,14 @@ import httpx
 from tenacity import retry, stop_after_attempt, wait_exponential
 from .base import BaseLLMEngine
 
+
 class OpenAIEngine(BaseLLMEngine):
     """OpenAI引擎实现"""
-    
+
     _client: ClassVar[AsyncOpenAI] = None
     _prompts: ClassVar[Dict[str, str]] = None
     # MAX_HISTORY = 10  # 最大历史记录数        //之前是直接写在类里的，现在改成了实例属性，并且从配置文件中读取
-    
+
     def __init__(self, config: Dict[str, Any]):
         super().__init__(config)
         self._init_client()
@@ -24,8 +25,10 @@ class OpenAIEngine(BaseLLMEngine):
     def _init_conversation_settings(self):
         """初始化对话设置"""
         self.conversation_context = {}
-        self.max_turns = self.config.get('conversation', {}).get('max_turns', 10)
-        self.truncate_mode = self.config.get('conversation', {}).get('truncate_mode', 'sliding')
+        self.max_turns = self.config.get(
+            'conversation', {}).get('max_turns', 10)
+        self.truncate_mode = self.config.get(
+            'conversation', {}).get('truncate_mode', 'sliding')
         # 从文件加载历史记录
         self._load_conversation_history()
 
@@ -92,7 +95,8 @@ class OpenAIEngine(BaseLLMEngine):
         if OpenAIEngine._client is None:
             OpenAIEngine._client = AsyncOpenAI(
                 api_key=self.config['api_key'],
-                base_url=self.config.get('base_url', "https://api.chatanywhere.tech"),
+                base_url=self.config.get(
+                    'base_url', "https://api.chatanywhere.tech"),
                 timeout=httpx.Timeout(self.config.get('timeout', 30.0))
             )
 
@@ -100,11 +104,11 @@ class OpenAIEngine(BaseLLMEngine):
         """截断对话上下文"""
         if len(context) <= 1:  # 只有system消息
             return context
-            
+
         turns = (len(context) - 1)   # 如果有多轮对话，每轮对话有两条消息
-        if turns <= self.max_turns: # 对话轮数未超过最大值
+        if turns <= self.max_turns:  # 对话轮数未超过最大值
             return context
-            
+
         if self.truncate_mode == 'clear':
             return [context[0]]
         else:  # sliding mode
@@ -135,7 +139,8 @@ class OpenAIEngine(BaseLLMEngine):
                             for conv in messages[-self.max_turns:]:
                                 recent_messages.extend(conv['messages'])
                             if recent_messages:
-                                system_prompt = self._prompts.get(role, self._prompts["default"])
+                                system_prompt = self._prompts.get(
+                                    role, self._prompts["default"])
                                 self.conversation_context[user_role_key] = [
                                     {"role": "system", "content": system_prompt}
                                 ] + recent_messages
@@ -145,10 +150,11 @@ class OpenAIEngine(BaseLLMEngine):
     async def chat(self, user_id: str, message: str, context: Optional[list] = None) -> Dict[str, Any]:
         """执行对话"""
         user_role_key = self._get_user_role_key(user_id)
-        
+
         # 初始化或更新用户上下文
         if user_role_key not in self.conversation_context:
-            system_prompt = self._prompts.get(self.current_role, self._prompts["default"])
+            system_prompt = self._prompts.get(
+                self.current_role, self._prompts["default"])
             self.conversation_context[user_role_key] = [
                 {"role": "system", "content": system_prompt}
             ]
@@ -157,7 +163,7 @@ class OpenAIEngine(BaseLLMEngine):
         self.conversation_context[user_role_key].append(
             {"role": "user", "content": message}
         )
-  
+
         try:
             response = await self._make_request(self.conversation_context[user_role_key])
             if not response["success"]:
@@ -175,10 +181,12 @@ class OpenAIEngine(BaseLLMEngine):
             )
 
             # 保持上下文在最大限制内
-            if len(self.conversation_context[user_role_key]) > self.max_turns + 1:  # +1 是因为system消息
+            # +1 是因为system消息
+            if len(self.conversation_context[user_role_key]) > self.max_turns + 1:
                 self.conversation_context[user_role_key] = [
                     self.conversation_context[user_role_key][0]  # 保留system消息
-                ] + self.conversation_context[user_role_key][-(self.max_turns):]  # 保留最近的消息
+                    # 保留最近的消息
+                ] + self.conversation_context[user_role_key][-(self.max_turns):]
 
             # 保存最近的对话到文件
             await self.save_conversation(user_id, [
@@ -204,7 +212,7 @@ class OpenAIEngine(BaseLLMEngine):
                 }
                 for msg in messages
             ]
-            
+
             response = await self._client.chat.completions.create(
                 model=self.config['model'],
                 messages=encoded_messages,
@@ -239,10 +247,11 @@ class OpenAIEngine(BaseLLMEngine):
     async def chat_stream(self, user_id: str, message: str, context: Optional[list] = None) -> AsyncGenerator[Dict[str, Any], None]:
         """流式对话"""
         user_role_key = self._get_user_role_key(user_id)
-        
+
         # 如果不存在用户上下文，则初始化
         if user_role_key not in self.conversation_context:
-            system_prompt = self._prompts.get(self.current_role, self._prompts["default"])
+            system_prompt = self._prompts.get(
+                self.current_role, self._prompts["default"])
             self.conversation_context[user_role_key] = [
                 {"role": "system", "content": system_prompt}
             ]
@@ -286,17 +295,18 @@ class OpenAIEngine(BaseLLMEngine):
             )
 
             # 控制上下文的最大长度
-            if len(self.conversation_context[user_role_key]) > self.max_turns + 1:  # +1 是 system 消息
+            # +1 是 system 消息
+            if len(self.conversation_context[user_role_key]) > self.max_turns + 1:
                 self.conversation_context[user_role_key] = [
                     self.conversation_context[user_role_key][0]  # 保留 system 消息
-                ] + self.conversation_context[user_role_key][-(self.max_turns):]  # 保留最近的消息
+                    # 保留最近的消息
+                ] + self.conversation_context[user_role_key][-(self.max_turns):]
 
             # 将最新的两条消息（用户 + AI）保存到文件
             await self.save_conversation(user_id, [
                 {"role": "user", "content": message},
                 {"role": "assistant", "content": assistant_response_buffer}
             ])
-
 
     def set_role(self, role_type: str) -> bool:
         if role_type in self._prompts:
@@ -337,7 +347,7 @@ class OpenAIEngine(BaseLLMEngine):
                 if user_role_key not in history:
                     history[user_role_key] = []
                 history[user_role_key].append(data)
-                
+
                 # 限制每个用户角色组合的历史记录数量
                 if len(history[user_role_key]) > self.max_turns:
                     history[user_role_key] = history[user_role_key][-self.max_turns:]
@@ -357,7 +367,7 @@ class OpenAIEngine(BaseLLMEngine):
             conversations_path = self.config['storage']['conversations_path']
             if not os.path.exists(conversations_path):
                 return []
-            
+
             user_role_key = self._get_user_role_key(user_id)
             with open(conversations_path, 'r', encoding='utf-8') as f:
                 history = json.load(f)

@@ -3,9 +3,10 @@ from .llm_engine.factory import LLMEngineFactory
 from .llm_engine.base import BaseLLMEngine
 from ..utils.config_loader import ConfigLoader
 
+
 class LLMService:
     """LLM服务类"""
-    
+
     def __init__(self, config_loader: ConfigLoader):
         self.config_loader = config_loader
         self._engine: Optional[BaseLLMEngine] = None    # 定义一个可选的引擎对象
@@ -24,20 +25,23 @@ class LLMService:
         llm_config = self.config_loader.get_llm_config()
         if not llm_config:
             raise RuntimeError("LLM configuration not found")
-            
+
         default_provider = llm_config.get("default_provider")
         if not default_provider:
             raise ValueError("No default provider specified in LLM config")
-        
-        # 获取provider配置，这里会自动合并storage等公共配置    
-        provider_config = self.config_loader.get_provider_config("llm", default_provider)
-        self._engine = LLMEngineFactory.create(default_provider, provider_config)
+
+        # 获取provider配置，这里会自动合并storage等公共配置
+        provider_config = self.config_loader.get_provider_config(
+            "llm", default_provider)
+        self._engine = LLMEngineFactory.create(
+            default_provider, provider_config)
 
     async def switch_engine(self, provider: str) -> None:
         """切换LLM引擎"""
         if hasattr(self._engine, 'close'):
             await self._engine.close()
-        provider_config = self.config_loader.get_provider_config("llm", provider)
+        provider_config = self.config_loader.get_provider_config(
+            "llm", provider)
         self._engine = LLMEngineFactory.create(provider, provider_config)
 
     def set_role(self, role_type: str) -> bool:
@@ -86,15 +90,16 @@ class LLMService:
         """流式对话"""
         if not self._engine:
             raise RuntimeError("LLM engine not initialized")
-
+        assistant_response_buffer = ""
         try:
             async for chunk in self._engine.chat_stream(user_id, message, context):
-                if self._callback:
-                    await self._callback(chunk)
+                assistant_response_buffer += chunk['text']
                 yield chunk
         except Exception as e:
             print(f"Error during stream chat: {str(e)}")
             raise
+        if self._callback:  # 使用完整的接收到的响应调用回调
+            await self._callback(assistant_response_buffer)
 
     def clear_context(self, user_id: str) -> None:
         """清除用户上下文"""
