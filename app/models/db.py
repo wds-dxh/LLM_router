@@ -7,6 +7,7 @@ import os
 # 加载环境变量
 load_dotenv()
 
+
 class DatabaseManager:
     _pool = None
 
@@ -30,9 +31,9 @@ class DatabaseManager:
     @asynccontextmanager
     async def get_cursor(cls) -> AsyncGenerator:
         """获取数据库游标"""
-        pool = await cls.get_pool() # 先获取连接池
+        pool = await cls.get_pool()  # 先获取连接池
         async with pool.acquire() as conn:  # 从连接池中获取连接
-            async with conn.cursor() as cursor: # 从连接中获取游标
+            async with conn.cursor() as cursor:  # 从连接中获取游标
                 yield cursor  # 直接返回游标，不提前访问 description
 
     @classmethod

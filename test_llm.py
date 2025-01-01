@@ -17,8 +17,11 @@ async def test_basic_chat(llm_service):
 
     # 测试对话
     print("\n=== 测试对话 ===")
-    response = await llm_service.chat(user_id, "你是谁呢？")
+    time_start = time.time()
+    response = await llm_service.chat(user_id, "我应该怎么学习数学呢？")
+    print("first response time: ", time.time() - time_start)
     print(f"响应: {response['text']}\n")
+
     # response = await llm_service.chat(user_id, "你会什么？")
     # print(f"响应: {response['text']}\n")
 
@@ -35,10 +38,10 @@ async def test_stream_chat(llm_service):
 
     print("\n=== 测试流式对话 ===")
     print("AI: ", end="", flush=True)
-
+    time_start = time.time()
     async for chunk in llm_service.chat_stream(user_id, "我今天心情不好，怎么办? "):
         if chunk.get('type') == 'content':
-            # print("first response time: ", time.time() - time_start)
+            print("first response time: ", time.time() - time_start)
             print(chunk['text'], end="", flush=True)
     # time_start = time.time()
     # async for chunk in llm_service.chat_stream(user_id, "你还记得我有多少钱吗？ 你还记得我有多少钱吗？"):
@@ -69,7 +72,7 @@ async def test_context_management(llm_service):
 
 async def run_tests(llm_service):
     # 并发执行 10 个 test_basic_chat 测试
-    tasks = [test_stream_chat(llm_service) for _ in range(1)]
+    tasks = [test_basic_chat(llm_service) for _ in range(1)]
     await asyncio.gather(*tasks)
 
 

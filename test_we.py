@@ -1,19 +1,30 @@
 import json
 import asyncio
+import os
 import time
 import websockets
 
 # 定义一个用于处理接收到消息的回调函数
 
+time_1 = 0
+time_2 = 0
+
 
 async def handle_message(response):
     # print(f"Received: {response}")
     # 不换行输出
-    print(response, end="", flush=True)
+    global time_1
+    global time_2
+    time_2 = time.time()    # 单位是秒
+    print(f"Received: {response}, time: {time_2 - time_1}")
+
+    # os._exit(0)
 
 
 async def test_websocket():
-    uri = "ws://lab-cqu.dxh-wds.top:8000/ws"
+    global time_1
+    # uri = "ws://lab-cqu.dxh-wds.top:8000/ws"
+    uri = "ws://localhost:8000/ws"
     device_id = "device_002"  # 替换为实际的 device_id
 
     for attempt in range(3):  # 尝试重连3次
@@ -23,7 +34,8 @@ async def test_websocket():
                 await websocket.send(device_id)
 
                 # 发送对话请求
-                chat_message = json.dumps({"text": "我有点头痛"})
+                chat_message = json.dumps({"text": "你是谁？"})
+                time_1 = time.time()
                 await websocket.send(chat_message)
 
                 # 注册接收到消息时调用的回调函数
