@@ -1,0 +1,24 @@
+{
+    "default_provider": "volcano",
+    "providers": {
+        "volcano": {
+            "appid": "5407974323",
+            "access_token": "R5Hqb1f_7gD-87aJzStv8vEvBSGG7j_A",
+            "cluster": "volcano_tts",
+            "host": "openspeech.bytedance.com",
+            "voice_type": "BV700_streaming",
+            "connection_pool": {
+                "max_connections": 1000,
+                "max_keepalive": 1000,
+                "keepalive_expiry": 30.0,
+                "timeout": 30.0
+            },
+            "audio_config": {
+                "encoding": "mp3",
+                "speed_ratio": 1.0,
+                "volume_ratio": 1.0,
+                "pitch_ratio": 1.0
+            }
+        }
+    }
+}
