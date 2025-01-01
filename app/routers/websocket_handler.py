@@ -5,12 +5,14 @@ from fastapi import WebSocket
 from starlette.websockets import WebSocketDisconnect
 from app.utils.config_loader import ConfigLoader
 from app.services.llm_service import LLMService
+from app.services.tts_service import TTSService
 
 logger = logging.getLogger(__name__)
 
 config_loader = ConfigLoader()
 # 创建 LLMService 实例
 llm_service = LLMService(config_loader)
+tts_service = TTSService()
 
 
 async def handle_websocket_connection(websocket: WebSocket):
