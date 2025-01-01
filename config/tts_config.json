@@ -8,13 +8,13 @@
             "host": "openspeech.bytedance.com",
             "voice_type": "BV700_streaming",
             "connection_pool": {
-                "max_connections": 1000,
-                "max_keepalive": 1000,
+                "max_connections": 2000,
+                "max_keepalive": 2000,
                 "keepalive_expiry": 30.0,
                 "timeout": 30.0
             },
             "audio_config": {
-                "encoding": "pcm",
+                "encoding": "wav",
                 "compression_rate": 1,
                 "rate": 8000,
                 "speed_ratio": 1.0,
