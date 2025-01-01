@@ -14,10 +14,20 @@
                 "timeout": 30.0
             },
             "audio_config": {
-                "encoding": "mp3",
+                "encoding": "pcm",
+                "compression_rate": 1,
+                "rate": 8000,
                 "speed_ratio": 1.0,
                 "volume_ratio": 1.0,
-                "pitch_ratio": 1.0
+                "pitch_ratio": 1.0,
+                "emotion": "happy",
+                "language": "cn"
+            },
+            "request_config": {
+                "silence_duration": "125",
+                "with_frontend": "1",
+                "frontend_type": "unitTson",
+                "pure_english_opt": "1"
             }
         }
     }

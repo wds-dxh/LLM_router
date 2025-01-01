@@ -11,7 +11,7 @@ async def test_single_request(tts_service, text: str, index: int):
     if result["success"]:
         print(f"Request {index} completed in {end_time - start_time:.2f}s")
         # 保存音频文件用于验证
-        with open(f"test_output_{index}.mp3", "wb") as f:
+        with open(f"test_output_{index}.pcm", "wb") as f:
             f.write(result["audio_data"])
     else:
         print(f"Request {index} failed: {result.get('error')}")
@@ -23,7 +23,7 @@ async def test_concurrent_requests(num_requests: int = 10):
     async with TTSService() as tts:
         # 准备测试文本
         test_texts = [
-            f"这是第{i+1}条测试消息，测试TTS服务的并发性能,测试TTS服务的并发性能,测试TTS服务的并发性能,测试TTS服务的并发性能,测试TTS服务的并发性能," for i in range(num_requests)
+            f"这是第{i+1}条测试消息，测试TTS服务的并发性能!" for i in range(num_requests)
         ]
 
         print(f"开始测试 {num_requests} 个并发请求...")

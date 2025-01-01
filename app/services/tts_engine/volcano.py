@@ -56,7 +56,7 @@ class VolcanoTTSEngine(BaseTTSEngine):
             if "data" not in result:
                 return {"success": False, "error": "No data in response"}
 
-            audio_data = base64.b64decode(result["data"])
+            audio_data = base64.b64decode(result["data"])   # 解码base64音频数据
             return {
                 "success": True,
                 "audio_data": audio_data,
@@ -77,30 +77,38 @@ class VolcanoTTSEngine(BaseTTSEngine):
         yield {"success": True, "type": "done"}
 
     def _build_request(self, text: str) -> Dict:
-        # 严格按照示例代码构建请求
+        audio_config = self.config.get("audio_config", {})
+        request_config = self.config.get("request_config", {})
+
         return {
             "app": {
                 "appid": self.config["appid"],
-                "token": "access_token",  # 保持这个值不变
+                "token": "access_token",
                 "cluster": self.config["cluster"]
             },
             "user": {
-                "uid": str(uuid.uuid4())  # 每次请求生成新的uid
+                "uid": str(uuid.uuid4())
             },
             "audio": {
                 "voice_type": self.config.get("voice_type", "BV700_streaming"),
-                "encoding": "mp3",
-                "speed_ratio": self.config.get("audio_config", {}).get("speed_ratio", 1.0),
-                "volume_ratio": self.config.get("audio_config", {}).get("volume_ratio", 1.0),
-                "pitch_ratio": self.config.get("audio_config", {}).get("pitch_ratio", 1.0)
+                "encoding": audio_config.get("encoding", "mp3"),
+                "compression_rate": audio_config.get("compression_rate", 1),
+                "rate": audio_config.get("rate", 24000),
+                "speed_ratio": audio_config.get("speed_ratio", 1.0),
+                "volume_ratio": audio_config.get("volume_ratio", 1.0),
+                "pitch_ratio": audio_config.get("pitch_ratio", 1.0),
+                "emotion": audio_config.get("emotion", "normal"),
+                "language": audio_config.get("language", "cn")
             },
             "request": {
                 "reqid": str(uuid.uuid4()),
                 "text": text,
                 "text_type": "plain",
                 "operation": "query",
-                "with_frontend": 1,
-                "frontend_type": "unitTson"
+                "silence_duration": request_config.get("silence_duration", "125"),
+                "with_frontend": request_config.get("with_frontend", "1"),
+                "frontend_type": request_config.get("frontend_type", "unitTson"),
+                "pure_english_opt": request_config.get("pure_english_opt", "1")
             }
         }
 
