@@ -1,5 +1,5 @@
 {
-    "default_provider": "ollama",
+    "default_provider": "zhipu",
     "providers": {
         "openai": {
             "api_key": "sk-PLvmgppR3434WqQI5vo0wgxB9FkFwzwXuomR3dFQnO7H2cp1",

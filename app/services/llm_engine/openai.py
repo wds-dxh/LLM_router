@@ -283,8 +283,8 @@ class OpenAIEngine(BaseLLMEngine):
                         'text': chunk.choices[0].delta.content,
                         'type': 'content'
                     }
-            # 输出结束标记
-            yield {'type': 'end'}  # 用于标记流式传输结束(主要是可以用于告知服务器可以关闭socket连接)
+            # # 输出结束标记
+            # yield {'type': 'end'}  # 用于标记流式传输结束(主要是可以用于告知服务器可以关闭socket连接)
         except Exception as e:
             # 遇到异常时，返回错误信息
             yield {'error': str(e), 'type': 'error'}

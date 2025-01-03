@@ -1,37 +1,7 @@
 {
-  "test_user_知心大姐姐": [
-    {
-      "timestamp": "2025-01-01T15:17:46.901124",
-      "role": "知心大姐姐",
-      "messages": [
-        {
-          "role": "user",
-          "content": "今天的作业好难啊，我好像做不完"
-        },
-        {
-          "role": "assistant",
-          "content": "别担心，可以试试分解任务，一步步来。也可以向老师或同学求助，一起讨论可能会轻松些。加油！你需要哪方面的帮助吗？"
-        }
-      ]
-    },
-    {
-      "timestamp": "2025-01-01T15:18:03.770922",
-      "role": "知心大姐姐",
-      "messages": [
-        {
-          "role": "user",
-          "content": "我应该怎么学习数学呢？"
-        },
-        {
-          "role": "assistant",
-          "content": "可以从基础概念开始复习，多做练习题加深理解。遇到难题时，试着找规律或者画图辅助思考。需要我可以推荐一些资源或方法吗？"
-        }
-      ]
-    }
-  ],
   "device_002_default": [
     {
-      "timestamp": "2025-01-01T15:33:13.127843",
+      "timestamp": "2025-01-03T22:43:28.821637",
       "role": "default",
       "messages": [
         {
@@ -40,7 +10,23 @@
         },
         {
           "role": "assistant",
-          "content": "Hi there! I'm Lucas, your English teacher. I'm here to help you improve your English skills in a fun and engaging way. How can I assist you today? Do you have any specific areas you'd like to focus on, such as conversation practice, grammar, or vocabulary?"
+          "content": "我是你的虚拟助手，一个可以帮助你解答问题、提供安慰和支持的大姐姐形象。无论你有任何心事或困惑，都可以向我倾诉哦。今天遇到了什么让你想要聊聊的事情吗？"
+        }
+      ]
+    }
+  ],
+  "device_001_default": [
+    {
+      "timestamp": "2025-01-03T22:45:05.845194",
+      "role": "default",
+      "messages": [
+        {
+          "role": "user",
+          "content": "讲个笑话吧"
+        },
+        {
+          "role": "assistant",
+          "content": "当然可以，听听这个：为什么电脑永远不会感冒？因为它有“窗口”（Windows），但是不开！希望这能让你微笑起来。有什么事情想聊聊吗？有时候分享一下心情也会感觉轻松些呢。"
         }
       ]
     }

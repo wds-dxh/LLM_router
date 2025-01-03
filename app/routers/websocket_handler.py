@@ -25,8 +25,8 @@ async def handle_websocket_connection(websocket: WebSocket):
 
         while True:
             data = await websocket.receive_text()
-            print(f"Received: {data}")
             message = json.loads(data)
+            print(message)
 
             if 'role' in message:
                 llm_service.set_role(message['role'])
@@ -40,10 +40,10 @@ async def handle_websocket_connection(websocket: WebSocket):
 
                         # 判断文本是否包含结束符，若有，发送之前的文本并保留后续部分
                         while True:
-                            if any(accumulated_text.endswith(suffix) for suffix in ['。', '！', '!', '.']):
+                            if any(accumulated_text.endswith(suffix) for suffix in ['。', '！', '!', '.', '？', '?', '；', ';']):
                                 # 找到结束符，发送前面的文本
                                 index = max(accumulated_text.rfind(suffix)
-                                            for suffix in ['。', '！', '!', '.'])
+                                            for suffix in ['。', '！', '!', '.', '？', '?', '；', ';'])
                                 # 包括结束符
                                 sentence = accumulated_text[:index + 1]
 
@@ -51,7 +51,8 @@ async def handle_websocket_connection(websocket: WebSocket):
                                 audio_data = await tts_service.synthesize(sentence)
 
                                 # 发送完整句子的音频数据
-                                await websocket.send_text(audio_data["audio_data"])
+                                await websocket.send_bytes(audio_data['audio_data'])
+                                # await websocket.send_text(sentence)
 
                                 # 保留后面的文本，继续累积
                                 accumulated_text = accumulated_text[index + 1:]
