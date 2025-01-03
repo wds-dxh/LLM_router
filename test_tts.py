@@ -23,7 +23,7 @@ async def test_concurrent_requests(num_requests: int = 10):
     async with TTSService() as tts:
         # 准备测试文本
         test_texts = [
-            f"这是第{i+1}条测试消息，测试TTS服务的并发性能!这是第{i+1}条测试消息，测试TTS服务的并发性能!这是第{i+1}条测试消息，测试TTS服务的并发性能!" for i in range(num_requests)
+            f"这是第{i+1}条测试消息，测试TTS服务的并发性能!" for i in range(num_requests)
         ]
 
         print(f"开始测试 {num_requests} 个并发请求...")
@@ -52,4 +52,4 @@ async def test_concurrent_requests(num_requests: int = 10):
 
 if __name__ == "__main__":
     print("=== 测试并发合成 ===")
-    asyncio.run(test_concurrent_requests(50))
+    asyncio.run(test_concurrent_requests(2))

@@ -1,5 +1,5 @@
 # 快捷提交到github脚本
-git pull
+# git pull
 
 git add .
 # 使用输入参数作为提交信息，并加上时间戳

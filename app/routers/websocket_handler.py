@@ -46,7 +46,12 @@ async def handle_websocket_connection(websocket: WebSocket):
                                             for suffix in ['。', '！', '!', '.'])
                                 # 包括结束符
                                 sentence = accumulated_text[:index + 1]
-                                await websocket.send_text(sentence)  # 发送完整句子
+
+                                # 生成音频数据
+                                audio_data = await tts_service.synthesize(sentence)
+
+                                # 发送完整句子的音频数据
+                                await websocket.send_text(audio_data["audio_data"])
 
                                 # 保留后面的文本，继续累积
                                 accumulated_text = accumulated_text[index + 1:]
