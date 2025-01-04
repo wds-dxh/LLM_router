@@ -16,7 +16,7 @@
             "audio_config": {
                 "encoding": "pcm",
                 "compression_rate": 1,
-                "rate": 8000,
+                "rate": 16000,
                 "speed_ratio": 1.0,
                 "volume_ratio": 1.0,
                 "pitch_ratio": 1.0,
