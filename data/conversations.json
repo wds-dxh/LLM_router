@@ -1,7 +1,7 @@
 {
   "device_002_default": [
     {
-      "timestamp": "2025-01-05T02:33:05.200504",
+      "timestamp": "2025-01-05T02:56:32.612252",
       "role": "default",
       "messages": [
         {
@@ -10,7 +10,7 @@
         },
         {
           "role": "assistant",
-          "content": "心理辅导助手，倾听陪伴。"
+          "content": "心理疗愈助手。"
         }
       ]
     }
