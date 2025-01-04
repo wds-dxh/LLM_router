@@ -65,7 +65,7 @@ async def handle_websocket_connection(websocket: WebSocket):
             if 'role' in message:
                 llm_service.set_role(message['role'])
 
-            if 'text' in message and message['text'] != "ok":
+            if 'text' in message and message['text'] != "ok" and message['text'] != "exit":
                 async for chunk in llm_service.chat_stream(auth.get("device_id", set()), message['text']):
                     if chunk.get('type') == 'content':
                         accumulated_text += chunk['text']
@@ -84,6 +84,10 @@ async def handle_websocket_connection(websocket: WebSocket):
 
             if message['text'] == "ok":
                 context.can_send_audio = True  # 收到ok消息时允许发送下一包数据
+            if message['text'] == "exit":
+                if send_task and not send_task.done():
+                    # 数据清空
+                    context.shared_audio_buffer.clear()
 
     except WebSocketDisconnect as e:
         logger.info(f"WebSocket connection closed: {e.code}, {e.reason}")
