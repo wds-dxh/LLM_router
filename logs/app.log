@@ -194,3 +194,15 @@
 2025-01-03 23:46:01,269 - app.middlewares.auth_middleware - INFO - WebSocket authentication successful for device_id: device_002
 2025-01-03 23:46:15,033 - app.middlewares.auth_middleware - INFO - WebSocket authentication successful for device_id: device_002
 2025-01-03 23:46:26,102 - app.middlewares.auth_middleware - INFO - WebSocket authentication successful for device_id: device_002
+2025-01-04 15:59:39,066 - app.middlewares.auth_middleware - INFO - WebSocket authentication successful for device_id: device_001
+2025-01-04 16:00:01,981 - app.middlewares.auth_middleware - INFO - WebSocket authentication successful for device_id: device_001
+2025-01-04 16:15:33,494 - app.middlewares.auth_middleware - INFO - WebSocket authentication successful for device_id: device_001
+2025-01-04 16:15:59,350 - app.middlewares.auth_middleware - INFO - WebSocket authentication successful for device_id: device_001
+2025-01-04 16:28:57,728 - app.middlewares.auth_middleware - INFO - WebSocket authentication successful for device_id: device_001
+2025-01-04 16:30:52,695 - app.middlewares.auth_middleware - INFO - WebSocket authentication successful for device_id: device_001
+2025-01-04 16:34:30,778 - app.middlewares.auth_middleware - INFO - WebSocket authentication successful for device_id: device_001
+2025-01-04 16:34:58,193 - app.middlewares.auth_middleware - INFO - WebSocket authentication successful for device_id: device_001
+2025-01-04 16:53:42,586 - app.middlewares.auth_middleware - INFO - WebSocket authentication successful for device_id: device_001
+2025-01-04 16:54:09,642 - app.middlewares.auth_middleware - INFO - WebSocket authentication successful for device_id: device_001
+2025-01-04 16:55:38,066 - app.middlewares.auth_middleware - INFO - WebSocket authentication successful for device_id: device_001
+2025-01-04 17:08:28,804 - app.middlewares.auth_middleware - INFO - WebSocket authentication successful for device_id: device_001

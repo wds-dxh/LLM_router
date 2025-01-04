@@ -39,25 +39,23 @@ async def handle_websocket_connection(websocket: WebSocket):
                         accumulated_text += chunk['text']  # 累加文本
 
                         # 判断文本是否包含结束符，若有，发送之前的文本并保留后续部分
-                        while True:
-                            if any(accumulated_text.endswith(suffix) for suffix in ['。', '！', '!', '.', '？', '?', '；', ';']):
-                                # 找到结束符，发送前面的文本
-                                index = max(accumulated_text.rfind(suffix)
-                                            for suffix in ['。', '！', '!', '.', '？', '?', '；', ';'])
-                                # 包括结束符
-                                sentence = accumulated_text[:index + 1]
+                        # while True:
+                        if any(accumulated_text.endswith(suffix) for suffix in ['。', '！', '!', '.', '？', '?', '；', ';']):
+                            # 找到结束符，发送前面的文本
+                            index = max(accumulated_text.rfind(suffix)
+                                        for suffix in ['。', '！', '!', '.', '？', '?', '；', ';'])
+                            # 包括结束符
+                            sentence = accumulated_text[:index + 1]
+                            print("sentence:", sentence)
+                            # 生成音频数据
+                            audio_data = await tts_service.synthesize(sentence)
 
-                                # 生成音频数据
-                                audio_data = await tts_service.synthesize(sentence)
+                            # 发送完整句子的音频数据
+                            await websocket.send_bytes(audio_data['audio_data'])
+                            # await websocket.send_text(sentence)
 
-                                # 发送完整句子的音频数据
-                                await websocket.send_bytes(audio_data['audio_data'])
-                                # await websocket.send_text(sentence)
-
-                                # 保留后面的文本，继续累积
-                                accumulated_text = accumulated_text[index + 1:]
-                            else:
-                                break  # 如果没有结束符，退出循环继续等待流数据
+                            # 保留后面的文本，继续累积
+                            accumulated_text = accumulated_text[index + 1:]
 
             # if 'text' in message: # 一次性返回所有文本
             #     accumulated_text = await llm_service.chat(auth.get("device_id", set()), message['text'])

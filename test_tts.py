@@ -11,7 +11,7 @@ async def test_single_request(tts_service, text: str, index: int):
     if result["success"]:
         print(f"Request {index} completed in {end_time - start_time:.2f}s")
         # 保存音频文件用于验证
-        with open(f"test_output_{index}.wav", "wb") as f:
+        with open(f"test_output_{index}.pcm", "wb") as f:
             f.write(result["audio_data"])
     else:
         print(f"Request {index} failed: {result.get('error')}")
@@ -52,4 +52,4 @@ async def test_concurrent_requests(num_requests: int = 10):
 
 if __name__ == "__main__":
     print("=== 测试并发合成 ===")
-    asyncio.run(test_concurrent_requests(2))
+    asyncio.run(test_concurrent_requests(1))

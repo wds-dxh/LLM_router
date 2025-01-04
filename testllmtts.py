@@ -15,20 +15,21 @@ time_2 = 0
 
 
 def on_message(ws, message):
-    global time_1, time_2
-    time_2 = time.time()
-    print(f"Time: {time_2 - time_1}")
-    os._exit(0)
+    # global time_1, time_2
+    # time_2 = time.time()
+    # print(f"Time: {time_2 - time_1}")
+    # os._exit(0)
     try:
         # 尝试将消息解码为音频数据,不需要解码，tts引擎已经解码
         audio_data = message
 
         # 生成带时间戳的文件名
         timestamp = time.strftime("%Y%m%d_%H%M%S")
-        filename = f"audio_output_{timestamp}.pcm"
+        # filename = f"audio_output_{timestamp}.pcm"
+        filename = f"audio_output.pcm"
 
         # 保存音频文件
-        with open(filename, "wb") as f:
+        with open(filename, "ab") as f:
             f.write(audio_data)
         logger.info(f"已保存音频文件: {filename}")
     except Exception as e:
