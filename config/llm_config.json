@@ -1,5 +1,5 @@
 {
-    "default_provider": "zhipu",
+    "default_provider": "ollama",
     "providers": {
         "openai": {
             "api_key": "sk-PLvmgppR3434WqQI5vo0wgxB9FkFwzwXuomR3dFQnO7H2cp1",
@@ -44,7 +44,7 @@
         "prompts_path": "data/prompts.json"
     },
     "conversation": {
-        "max_turns": 1,
+        "max_turns": 3,
         "truncate_mode": "sliding"
     }
 }
