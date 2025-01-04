@@ -1,3 +1,4 @@
+import asyncio
 import time
 import json
 import logging
@@ -14,14 +15,43 @@ config_loader = ConfigLoader()
 llm_service = LLMService(config_loader)
 tts_service = TTSService()
 
+# 定义缓冲区大小，每次读取1024采样点，每个采样点占2字节
+BUFFER_SIZE = 1024 * 2 * 4
+
+# 全局音频缓冲区
+shared_audio_buffer = bytearray()
+
+
+async def audio_sender(websocket: WebSocket):
+    """
+    异步发送音频数据
+    """
+    global shared_audio_buffer
+    try:
+        while True:
+            if len(shared_audio_buffer) >= BUFFER_SIZE:
+                chunk = shared_audio_buffer[:BUFFER_SIZE]
+                shared_audio_buffer = shared_audio_buffer[BUFFER_SIZE:]
+                await websocket.send_bytes(chunk)
+                await asyncio.sleep(0.067)  # 每次发送后延迟10ms
+
+            else:
+                await asyncio.sleep(0.06)  # 如果没有数据，短暂等待
+    except Exception as e:
+        logger.error(f"Audio sender error: {str(e)}")
+
 
 async def handle_websocket_connection(websocket: WebSocket):
     """
     处理 WebSocket 连接，逐句发送响应
     """
+    global shared_audio_buffer
     try:
         auth = getattr(websocket.state, "auth", None)
         accumulated_text = ""  # 用于累积返回的文本
+
+        # 启动音频发送任务, 用于异步发送音频数据
+        send_task = asyncio.create_task(audio_sender(websocket))
 
         while True:
             data = await websocket.receive_text()
@@ -30,36 +60,32 @@ async def handle_websocket_connection(websocket: WebSocket):
 
             if 'role' in message:
                 llm_service.set_role(message['role'])
-                # 角色已切换，可以发送一条反馈信息
-                # await websocket.send_text(f"角色已切换为: {llm_service.get_current_role()}")
 
             if 'text' in message:
                 async for chunk in llm_service.chat_stream(auth.get("device_id", set()), message['text']):
                     if chunk.get('type') == 'content':
-                        accumulated_text += chunk['text']  # 累加文本
+                        accumulated_text += chunk['text']
 
-                        # 判断文本是否包含结束符，若有，发送之前的文本并保留后续部分
-                        # while True:
                         if any(accumulated_text.endswith(suffix) for suffix in ['。', '！', '!', '.', '？', '?', '；', ';']):
-                            # 找到结束符，发送前面的文本
-                            index = max(accumulated_text.rfind(suffix)
-                                        for suffix in ['。', '！', '!', '.', '？', '?', '；', ';'])
-                            # 包括结束符
+                            index = max(accumulated_text.rfind(suffix) for suffix in [
+                                        '。', '！', '!', '.', '？', '?', '；', ';'])
                             sentence = accumulated_text[:index + 1]
                             print("sentence:", sentence)
+
                             # 生成音频数据
-                            audio_data = await tts_service.synthesize(sentence)
+                            # audio_data = await tts_service.synthesize(sentence)
+                            # shared_audio_buffer.extend(
+                            #     audio_data['audio_data'])
 
-                            # 发送完整句子的音频数据
-                            await websocket.send_bytes(audio_data['audio_data'])
-                            # await websocket.send_text(sentence)
+                            # # 从文件中读取音频数据
+                            filename = f"audio_output1.pcm"
+                            with open(filename, "rb") as f:
+                                audio_data = f.read()
+                            shared_audio_buffer.extend(audio_data)
 
-                            # 保留后面的文本，继续累积
+                            # 一次性发送音频数据
+                            # await websocket.send_bytes(audio_data['audio_data'])
                             accumulated_text = accumulated_text[index + 1:]
-
-            # if 'text' in message: # 一次性返回所有文本
-            #     accumulated_text = await llm_service.chat(auth.get("device_id", set()), message['text'])
-            #     await websocket.send_text(accumulated_text['text'])
 
     except WebSocketDisconnect as e:
         logger.info(f"WebSocket connection closed: {e.code}, {e.reason}")
@@ -68,4 +94,3 @@ async def handle_websocket_connection(websocket: WebSocket):
         await websocket.close()
     finally:
         logger.info("WebSocket connection handler has exited")
-        del websocket

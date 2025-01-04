@@ -26,7 +26,7 @@ def on_message(ws, message):
         # 生成带时间戳的文件名
         timestamp = time.strftime("%Y%m%d_%H%M%S")
         # filename = f"audio_output_{timestamp}.pcm"
-        filename = f"audio_output.pcm"
+        filename = f"audio_output8000.pcm"
 
         # 保存音频文件
         with open(filename, "ab") as f:
