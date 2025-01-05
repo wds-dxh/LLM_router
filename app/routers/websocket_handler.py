@@ -78,6 +78,8 @@ async def handle_websocket_connection(websocket: WebSocket):
 
                             # 生成音频数据
                             audio_data = await tts_service.synthesize(sentence)
+                            context.can_send_audio = True  # 当收到一次数据的时候也要触发一下发送任务
+
                             context.shared_audio_buffer.extend(
                                 audio_data['audio_data'])
                             accumulated_text = accumulated_text[index + 1:]
@@ -85,6 +87,7 @@ async def handle_websocket_connection(websocket: WebSocket):
             if message['text'] == "ok":
                 context.can_send_audio = True  # 收到ok消息时允许发送下一包数据
             if message['text'] == "exit":
+                context.can_send_audio = False  # 收到exit消息时停止发送数据
                 if send_task and not send_task.done():
                     # 数据清空
                     context.shared_audio_buffer.clear()
