@@ -443,3 +443,4 @@
 2025-01-05 19:55:35,324 - app.middlewares.auth_middleware - INFO - WebSocket authentication successful for device_id: device_002
 2025-01-05 19:56:07,068 - app.middlewares.auth_middleware - INFO - WebSocket authentication successful for device_id: device_002
 2025-01-05 19:57:10,758 - app.middlewares.auth_middleware - INFO - WebSocket authentication successful for device_id: device_002
+2025-01-05 20:03:31,583 - app.middlewares.auth_middleware - INFO - WebSocket authentication successful for device_id: device_002
