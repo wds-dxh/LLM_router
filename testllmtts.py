@@ -2,7 +2,7 @@ import asyncio
 import json
 import logging
 import os
-import websocket
+import websocket    # pip install websocket-client
 import threading
 import base64
 import time
@@ -82,7 +82,7 @@ def on_open(ws):
 
 def start_websocket():
     websocket.enableTrace(True)  # 启用详细日志
-    ws_url = "ws://lab-cqu.dxh-wds.top:8000/ws"
+    ws_url = "ws://47.108.223.146:8000/ws"
 
     ws = websocket.WebSocketApp(ws_url,
                                 on_message=on_message,

@@ -1,3 +1,9 @@
+'''
+Author: wds2dxh wdsnpshy@163.com
+Date: 2025-01-10 14:39:13
+Description: 
+Copyright (c) 2025 by ${wds2dxh}, All Rights Reserved. 
+'''
 import json
 import asyncio
 import os
@@ -24,7 +30,7 @@ async def handle_message(response):
 async def test_websocket():
     global time_1
     # uri = "ws://lab-cqu.dxh-wds.top:8000/ws"
-    uri = "ws://localhost:8000/ws"
+    uri = "ws://47.108.223.146:8000/ws"
     device_id = "device_002"  # 替换为实际的 device_id
 
     for attempt in range(3):  # 尝试重连3次
